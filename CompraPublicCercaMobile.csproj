@@ -31,7 +31,7 @@
         <ApplicationTitle>CompraPublicCercaMobile</ApplicationTitle>
 
         <!-- App Identifier -->
-        <ApplicationId>com.companyname.comprapubliccercamobile</ApplicationId>
+        <ApplicationId>com.uisrael.comprapublica</ApplicationId>
 
         <!-- Versions -->
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -42,7 +42,7 @@
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">17.0</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
         <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     </PropertyGroup>
@@ -68,6 +68,33 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+        <PackageReference Include="Xamarin.Firebase.Auth" Version="124.2.0.1"/>
+        <PackageReference Include="Xamarin.GooglePlayServices.Auth" Version="121.6.0.2"/>
+        <!-- The Firebase packages pull newer AndroidX versions than MAUI: keep the Ktx packages aligned to avoid duplicate classes. -->
+        <PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.9.0"/>
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.11.0.1"/>
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" Version="2.11.0.1"/>
+        <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.6.0.1"/>
+        <GoogleServicesJson Include="Platforms\Android\google-services.json" Condition="Exists('Platforms\Android\google-services.json')"/>
+    </ItemGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+        <CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
+    </PropertyGroup>
+
+    <!-- The simulator needs the keychain entitlement but no Apple developer account: sign ad hoc. -->
+    <PropertyGroup Condition="$(RuntimeIdentifier.StartsWith('iossimulator'))">
+        <CodesignKey>-</CodesignKey>
+    </PropertyGroup>
+
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+        <PackageReference Include="AdamE.Firebase.iOS.Auth" Version="12.19.3"/>
+        <PackageReference Include="AdamE.Google.iOS.SignIn" Version="10.1.0"/>
+        <BundleResource Include="Platforms\iOS\GoogleService-Info.plist" Link="GoogleService-Info.plist" Condition="Exists('Platforms\iOS\GoogleService-Info.plist')"/>
     </ItemGroup>
 
 </Project>
