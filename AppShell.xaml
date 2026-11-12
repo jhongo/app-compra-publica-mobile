@@ -3,12 +3,20 @@
     x:Class="CompraPublicCercaMobile.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:CompraPublicCercaMobile"
-    Title="CompraPublicCercaMobile">
+    xmlns:constants="clr-namespace:CompraPublicCercaMobile.Constants"
+    xmlns:views="clr-namespace:CompraPublicCercaMobile.Views"
+    Title="CompraPublicCercaMobile"
+    Shell.FlyoutBehavior="Disabled">
+
+    <!-- La primera ruta es la pantalla inicial. -->
+    <ShellContent
+        Title="Iniciar sesión"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="{x:Static constants:NavigationRoutes.Login}" />
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Inicio"
+        ContentTemplate="{DataTemplate views:vInicio}"
+        Route="{x:Static constants:NavigationRoutes.Inicio}" />
 
 </Shell>

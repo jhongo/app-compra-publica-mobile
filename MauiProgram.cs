@@ -26,8 +26,15 @@ public static class MauiProgram
 #else
         builder.Services.AddSingleton<IAuthService, UnsupportedAuthService>();
 #endif
+        builder.Services.AddSingleton<ISessionService, SessionService>();
+        builder.Services.AddSingleton<INavigationService, ShellNavigationService>();
+
+        builder.Services.AddSingleton<AppShell>();
+
+        // Views y ViewModels: Transient (docs/arquitectura.md, decisión 2).
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
+        builder.Services.AddTransient<vInicio>();
 
 #if DEBUG
         builder.Logging.AddDebug();

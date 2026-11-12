@@ -54,4 +54,17 @@ public sealed class IosAuthService : IAuthService
 
         return new AuthUser(user.Uid, user.DisplayName, user.Email);
     }
+
+    public Task SignOutAsync()
+    {
+        SignIn.SharedInstance.SignOutUser();
+
+        var auth = Auth.DefaultInstance;
+        if (auth is not null && !auth.SignOut(out var error))
+        {
+            throw new NSErrorException(error);
+        }
+
+        return Task.CompletedTask;
+    }
 }
