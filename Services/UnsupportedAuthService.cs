@@ -8,4 +8,7 @@ public sealed class UnsupportedAuthService : IAuthService
 {
     public Task<AuthUser?> SignInWithGoogleAsync() =>
         throw new PlatformNotSupportedException("La prueba de login con Google solo está disponible en Android e iOS.");
+
+    // Nothing to close: sign-in never succeeds on these platforms.
+    public Task SignOutAsync() => Task.CompletedTask;
 }
