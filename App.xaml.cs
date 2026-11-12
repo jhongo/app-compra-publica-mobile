@@ -14,6 +14,6 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(_services.GetRequiredService<Views.LoginPage>());
+        return new Window(_services.GetRequiredService<AppShell>());
     }
 }

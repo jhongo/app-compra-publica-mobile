@@ -5,7 +5,8 @@
              xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
              x:Class="CompraPublicCercaMobile.Views.LoginPage"
              x:DataType="viewModels:LoginViewModel"
-             Title="Iniciar sesión">
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False">
     <VerticalStackLayout Padding="24"
                          Spacing="16"
                          VerticalOptions="Center">
@@ -19,6 +20,11 @@
                            IsVisible="{Binding IsBusy}" />
 
         <Label Text="{Binding StatusMessage}"
+               HorizontalTextAlignment="Center" />
+
+        <Label Text="{Binding ErrorMessage}"
+               IsVisible="{Binding HasError}"
+               TextColor="{AppThemeBinding Light=#B3261E, Dark=#F2B8B5}"
                HorizontalTextAlignment="Center" />
     </VerticalStackLayout>
 </ContentPage>

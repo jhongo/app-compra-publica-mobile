@@ -52,6 +52,14 @@ public sealed class AndroidAuthService : IAuthService
         return new AuthUser(user.Uid, user.DisplayName, user.Email);
     }
 
+    public Task SignOutAsync()
+    {
+        // The Google account is already cleared before each sign-in, so closing
+        // the Firebase session is enough.
+        FirebaseAuth.Instance.SignOut();
+        return Task.CompletedTask;
+    }
+
     public static void HandleActivityResult(int requestCode, Intent? data)
     {
         if (requestCode == GoogleSignInRequestCode)
