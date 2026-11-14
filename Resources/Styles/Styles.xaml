@@ -410,4 +410,34 @@
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
 
+    <!-- Botón para validar correo -->
+    <Style x:Key="ValidateButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor"
+            Value="{StaticResource RegisterBlue}" />
+        <Setter Property="TextColor"
+            Value="{StaticResource White}" />
+        <Setter Property="CornerRadius" Value="8" />
+    </Style>
+
+    <!-- Botón principal de registro -->
+    <Style x:Key="RegisterButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor"
+            Value="{StaticResource RegisterGreen}" />
+        <Setter Property="TextColor"
+            Value="{StaticResource White}" />
+        <Setter Property="CornerRadius" Value="8" />
+    </Style>
+
+    <!-- Contenedor visual del botón Google -->
+    <Style x:Key="GoogleRegisterBorderStyle"
+       TargetType="Border">
+        <Setter Property="BackgroundColor"
+            Value="{StaticResource RegisterRed}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

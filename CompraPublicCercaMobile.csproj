@@ -49,37 +49,37 @@
 
     <ItemGroup>
         <!-- App Icon -->
-        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4"/>
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
         <!-- Splash Screen -->
-        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128"/>
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
         <!-- Images -->
-        <MauiImage Include="Resources\Images\*"/>
-        <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185"/>
+        <MauiImage Include="Resources\Images\*" />
+        <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 
         <!-- Custom Fonts -->
-        <MauiFont Include="Resources\Fonts\*"/>
+        <MauiFont Include="Resources\Fonts\*" />
 
         <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)"/>
+        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0"/>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
+        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-        <PackageReference Include="Xamarin.Firebase.Auth" Version="124.2.0.1"/>
-        <PackageReference Include="Xamarin.GooglePlayServices.Auth" Version="121.6.0.2"/>
+        <PackageReference Include="Xamarin.Firebase.Auth" Version="124.2.0.1" />
+        <PackageReference Include="Xamarin.GooglePlayServices.Auth" Version="121.6.0.2" />
         <!-- The Firebase packages pull newer AndroidX versions than MAUI: keep the Ktx packages aligned to avoid duplicate classes. -->
-        <PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.9.0"/>
-        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.11.0.1"/>
-        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" Version="2.11.0.1"/>
-        <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.6.0.1"/>
-        <GoogleServicesJson Include="Platforms\Android\google-services.json" Condition="Exists('Platforms\Android\google-services.json')"/>
+        <PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.9.0" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.11.0.1" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" Version="2.11.0.1" />
+        <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.6.0.1" />
+        <GoogleServicesJson Include="Platforms\Android\google-services.json" Condition="Exists('Platforms\Android\google-services.json')" />
     </ItemGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
@@ -92,9 +92,15 @@
     </PropertyGroup>
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
-        <PackageReference Include="AdamE.Firebase.iOS.Auth" Version="12.19.3"/>
-        <PackageReference Include="AdamE.Google.iOS.SignIn" Version="10.1.0"/>
-        <BundleResource Include="Platforms\iOS\GoogleService-Info.plist" Link="GoogleService-Info.plist" Condition="Exists('Platforms\iOS\GoogleService-Info.plist')"/>
+        <PackageReference Include="AdamE.Firebase.iOS.Auth" Version="12.19.3" />
+        <PackageReference Include="AdamE.Google.iOS.SignIn" Version="10.1.0" />
+        <BundleResource Include="Platforms\iOS\GoogleService-Info.plist" Link="GoogleService-Info.plist" Condition="Exists('Platforms\iOS\GoogleService-Info.plist')" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiXaml Update="Views\RegisterPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
     </ItemGroup>
 
 </Project>
