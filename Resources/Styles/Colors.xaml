@@ -27,6 +27,11 @@
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
+    <Color x:Key="PrimaryColor">#2196F3</Color>
+    <Color x:Key="GoogleButtonColor">#DB4437</Color>
+    <Color x:Key="SeparatorColor">#CCCCCC</Color>
+    <Color x:Key="PrimaryDarkColor">#E0E0E0</Color>
+
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
