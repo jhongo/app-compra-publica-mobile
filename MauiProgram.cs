@@ -1,4 +1,5 @@
-﻿using CompraPublicCercaMobile.Services;
+﻿
+using CompraPublicCercaMobile.Services;
 using CompraPublicCercaMobile.Services.Interfaces;
 using CompraPublicCercaMobile.ViewModels;
 using CompraPublicCercaMobile.Views;
@@ -26,8 +27,14 @@ public static class MauiProgram
 #else
         builder.Services.AddSingleton<IAuthService, UnsupportedAuthService>();
 #endif
+
+        // Login
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
+
+        // Registro
+        builder.Services.AddTransient<RegisterViewModel>();
+        builder.Services.AddTransient<RegisterPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

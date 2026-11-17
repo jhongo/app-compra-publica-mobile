@@ -46,4 +46,9 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <!-- Colores de la pantalla de registro -->
+    <Color x:Key="RegisterBlue">#2563EB</Color>
+    <Color x:Key="RegisterGreen">#16A34A</Color>
+    <Color x:Key="RegisterRed">#DC2626</Color>
 </ResourceDictionary>
