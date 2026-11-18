@@ -3,104 +3,26 @@
              xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
              x:Class="CompraPublicCercaMobile.Views.LoginPage"
              x:DataType="viewModels:LoginViewModel"
-             Title="Iniciar Sesión">
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False">
+    <VerticalStackLayout Padding="24"
+                         Spacing="16"
+                         VerticalOptions="Center">
+        <Label Text="Compra Pública Cerca"
+               Style="{StaticResource Headline}" />
 
-    <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="20" VerticalOptions="Center">
+        <Button Text="Iniciar sesión con Google"
+                Command="{Binding SignInWithGoogleCommand}" />
 
-            <!-- Título centrado en dos líneas -->
-            <Label Text="COMPRA PÚBLICA&#10;CERCA"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   HorizontalTextAlignment="Center"
-                   TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkColor}, Dark={StaticResource White}}" />
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}" />
 
-            <!-- Campo Usuario -->
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Usuario" FontSize="14" FontAttributes="Bold" />
-                <Entry Placeholder="Ingrese usuario"
-                       Text="{Binding Username}" />
-            </VerticalStackLayout>
+        <Label Text="{Binding StatusMessage}"
+               HorizontalTextAlignment="Center" />
 
-            <!-- Campo Contraseña -->
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Contraseña" FontSize="14" FontAttributes="Bold" />
-                <Grid ColumnDefinitions="*, Auto">
-                    <Entry Grid.Column="0"
-                           Placeholder="Ingrese contraseña"
-                           IsPassword="True"
-                           Text="{Binding Password}" />
-                    <!-- Nota: Puedes cambiar este botón por un ícono de ojo interactivo en un issue posterior de lógica -->
-                    <Button Grid.Column="1"
-                            Text="👁"
-                            BackgroundColor="Transparent"
-                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
-                            Command="{Binding TogglePasswordVisibilityCommand}" />
-                </Grid>
-            </VerticalStackLayout>
-
-            <!-- Enlace Recuperar contraseña alineado a la derecha -->
-            <HorizontalStackLayout HorizontalOptions="End">
-                <Label Text="Recuperar contraseña"
-                       TextColor="{StaticResource PrimaryColor}"
-                       TextDecorations="Underline">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding RecoverPasswordCommand}" />
-                    </Label.GestureRecognizers>
-                </Label>
-            </HorizontalStackLayout>
-
-            <!-- Botón principal Ingresar -->
-            <Button Text="Ingresar"
-                    BackgroundColor="{StaticResource PrimaryColor}"
-                    TextColor="White"
-                    CornerRadius="8"
-                    Command="{Binding LoginCommand}" />
-
-            <!-- Separador horizontal con la letra "O" al centro -->
-            <Grid ColumnDefinitions="*, Auto, *" ColumnSpacing="10" VerticalOptions="Center">
-                <BoxView Grid.Column="0" HeightRequest="1" BackgroundColor="{StaticResource SeparatorColor}" VerticalOptions="Center" />
-                <Label Grid.Column="1" Text="O" FontSize="14" TextColor="{StaticResource SeparatorColor}" FontAttributes="Bold" />
-                <BoxView Grid.Column="2" HeightRequest="1" BackgroundColor="{StaticResource SeparatorColor}" VerticalOptions="Center" />
-            </Grid>
-
-            <!-- Botón Iniciar Sesión con Google -->
-            <Button Text="Iniciar Sesión con Google"
-                    BackgroundColor="#DB4437"
-                    TextColor="White"
-                    CornerRadius="8"
-                    Command="{Binding SignInWithGoogleCommand}">
-                <Button.ImageSource>
-                    <FontImageSource Glyph="G" Color="White" Size="18" />
-                    <!-- O si prefieres usar tu archivo de imagen local:
-                    <ImageSource File="google_logo.png" /> -->
-                </Button.ImageSource>
-            </Button>
-
-            <!-- Texto "¿No tienes una cuenta?" + enlace "Regístrate" -->
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
-                <Label Text="¿No tienes una cuenta?" />
-                <Label Text="Regístrate"
-                       TextColor="{StaticResource PrimaryColor}"
-                       FontAttributes="Bold">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding RegisterCommand}" />
-                    </Label.GestureRecognizers>
-                </Label>
-            </HorizontalStackLayout>
-
-            <!-- ActivityIndicator y mensaje de estado integrados sin romper diseño -->
-            <VerticalStackLayout Spacing="10" Margin="0,10,0,0">
-                <ActivityIndicator IsRunning="{Binding IsBusy}"
-                                   IsVisible="{Binding IsBusy}"
-                                   HorizontalOptions="Center"
-                                   Color="{StaticResource PrimaryColor}" />
-                <Label Text="{Binding StatusMessage}"
-                       HorizontalTextAlignment="Center"
-                       TextColor="{StaticResource PrimaryColor}"
-                       FontSize="13" />
-            </VerticalStackLayout>
-
-        </VerticalStackLayout>
-    </ScrollView>
+        <Label Text="{Binding ErrorMessage}"
+               IsVisible="{Binding HasError}"
+               TextColor="{AppThemeBinding Light=#B3261E, Dark=#F2B8B5}"
+               HorizontalTextAlignment="Center" />
+    </VerticalStackLayout>
 </ContentPage>
