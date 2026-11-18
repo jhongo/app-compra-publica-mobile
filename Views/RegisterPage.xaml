@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
+    x:Class="CompraPublicCercaMobile.Views.RegisterPage"
+    x:DataType="viewModels:RegisterViewModel"
+    Title="Registro"
+    SafeAreaEdges="All">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="24,55,24,30"
+            Spacing="18">
+
+            <!-- Título -->
+            <Label
+                Text="Registro"
+                Style="{StaticResource Headline}"
+                Margin="0,15,0,25" />
+
+            <!-- Nombres y Apellidos -->
+            <Grid
+                ColumnDefinitions="*,*"
+                ColumnSpacing="15">
+
+                <VerticalStackLayout
+                    Grid.Column="0"
+                    Spacing="5">
+
+                    <Label
+                        Text="Nombres"
+                        FontAttributes="Bold" />
+
+                    <Entry
+                        Placeholder="Ingresa tus nombres"
+                        Text="{Binding FirstNames}" />
+
+                </VerticalStackLayout>
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    Spacing="5">
+
+                    <Label
+                        Text="Apellidos"
+                        FontAttributes="Bold" />
+
+                    <Entry
+                        Placeholder="Ingresa tus apellidos"
+                        Text="{Binding LastNames}" />
+
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- Correo electrónico -->
+            <VerticalStackLayout Spacing="5">
+
+                <Label
+                    Text="Correo"
+                    FontAttributes="Bold" />
+
+                <Grid
+                    ColumnDefinitions="*,Auto"
+                    ColumnSpacing="8">
+
+                    <Entry
+                        Grid.Column="0"
+                        Placeholder="Ingresa tu correo"
+                        Keyboard="Email"
+                        Text="{Binding Email}" />
+
+                    <Button
+                        Grid.Column="1"
+                        Text="Validar"
+                        Style="{StaticResource ValidateButtonStyle}" />
+
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- Código de validación -->
+            <VerticalStackLayout Spacing="5">
+
+                <Label
+                    Text="Código de Validación"
+                    FontAttributes="Bold" />
+
+                <Entry
+                    Placeholder="Ingresa el código de validación"
+                    Keyboard="Numeric"
+                    Text="{Binding VerificationCode}" />
+
+            </VerticalStackLayout>
+
+            <!-- Dirección -->
+            <VerticalStackLayout Spacing="5">
+
+                <Label
+                    Text="Dirección"
+                    FontAttributes="Bold" />
+
+                <Entry
+                    Placeholder="Ingresa tu dirección"
+                    Text="{Binding Address}" />
+
+            </VerticalStackLayout>
+
+            <!-- Código postal y fecha de nacimiento -->
+            <Grid
+                ColumnDefinitions="*,*"
+                ColumnSpacing="15">
+
+                <VerticalStackLayout
+                    Grid.Column="0"
+                    Spacing="5">
+
+                    <Label
+                        Text="Código Postal"
+                        FontAttributes="Bold" />
+
+                    <Entry
+                        Placeholder="Código postal"
+                        Keyboard="Numeric"
+                        Text="{Binding PostalCode}" />
+
+                </VerticalStackLayout>
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    Spacing="5">
+
+                    <Label
+                        Text="Fecha de Nacimiento"
+                        FontAttributes="Bold" />
+
+                    <DatePicker
+                        Date="{Binding BirthDate}"
+                        Format="dd/MM/yyyy"
+                        MaximumDate="2026-11-14" />
+
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- Botón principal Registrarse -->
+            <Button
+                Text="Registrarse"
+                Style="{StaticResource RegisterButtonStyle}"
+                HorizontalOptions="Fill"
+                FontAttributes="Bold"
+                Margin="0,15,0,0" />
+
+            <!-- Separador -->
+            <Grid
+                ColumnDefinitions="*,Auto,*"
+                ColumnSpacing="12"
+                Margin="0,5">
+
+                <BoxView
+                    Grid.Column="0"
+                    HeightRequest="1"
+                    VerticalOptions="Center" />
+
+                <Label
+                    Grid.Column="1"
+                    Text="o"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center" />
+
+                <BoxView
+                    Grid.Column="2"
+                    HeightRequest="1"
+                    VerticalOptions="Center" />
+
+            </Grid>
+
+            <!-- Botón visual de Google -->
+            <Border
+                Style="{StaticResource GoogleRegisterBorderStyle}"
+                HeightRequest="48"
+                HorizontalOptions="Fill">
+
+                <Grid
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="10"
+                    Padding="16,5">
+
+                    <Image
+                        Grid.Column="0"
+                        Source="google_icon.png"
+                        WidthRequest="28"
+                        HeightRequest="28"
+                        VerticalOptions="Center" />
+
+                    <Label
+                        Grid.Column="1"
+                        Text="Registrarse con Google"
+                        TextColor="{StaticResource White}"
+                        FontAttributes="Bold"
+                        VerticalOptions="Center"
+                        HorizontalTextAlignment="Center" />
+
+                </Grid>
+
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

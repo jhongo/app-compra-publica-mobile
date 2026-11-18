@@ -27,6 +27,11 @@
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
+    <Color x:Key="PrimaryColor">#2196F3</Color>
+    <Color x:Key="GoogleButtonColor">#DB4437</Color>
+    <Color x:Key="SeparatorColor">#CCCCCC</Color>
+    <Color x:Key="PrimaryDarkColor">#E0E0E0</Color>
+
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
@@ -41,4 +46,9 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <!-- Colores de la pantalla de registro -->
+    <Color x:Key="RegisterBlue">#2563EB</Color>
+    <Color x:Key="RegisterGreen">#16A34A</Color>
+    <Color x:Key="RegisterRed">#DC2626</Color>
 </ResourceDictionary>

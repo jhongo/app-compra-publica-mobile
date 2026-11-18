@@ -1,4 +1,5 @@
-﻿using CompraPublicCercaMobile.Services;
+﻿
+using CompraPublicCercaMobile.Services;
 using CompraPublicCercaMobile.Services.Interfaces;
 using CompraPublicCercaMobile.ViewModels;
 using CompraPublicCercaMobile.Views;
@@ -35,6 +36,10 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<vInicio>();
+
+        // Registro
+        builder.Services.AddTransient<RegisterViewModel>();
+        builder.Services.AddTransient<RegisterPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();
