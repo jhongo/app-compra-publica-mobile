@@ -8,6 +8,9 @@ public static class NavigationRoutes
 {
     public const string Login = "login";
 
+    // Ruta de detalle (se apila sobre el login).
+    public const string Registro = "registro";
+
     // Pestañas de la barra de navegación inferior.
     public const string Inicio = "inicio";
     public const string Buscar = "buscar";

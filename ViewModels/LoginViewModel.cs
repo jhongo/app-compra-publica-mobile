@@ -17,6 +17,16 @@ public partial class LoginViewModel : BaseViewModel
     [ObservableProperty]
     private string _statusMessage = "Inicia sesión para continuar.";
 
+    // TODO: usar en el login con usuario y contraseña cuando exista ese servicio.
+    [ObservableProperty]
+    private string _username = string.Empty;
+
+    [ObservableProperty]
+    private string _password = string.Empty;
+
+    [ObservableProperty]
+    private bool _isPasswordHidden = true;
+
     public LoginViewModel(
         IAuthService authService,
         ISessionService session,
@@ -29,6 +39,12 @@ public partial class LoginViewModel : BaseViewModel
         _logger = logger;
         Title = "Iniciar sesión";
     }
+
+    [RelayCommand]
+    private void TogglePasswordVisibility() => IsPasswordHidden = !IsPasswordHidden;
+
+    [RelayCommand]
+    private Task GoToRegisterAsync() => _navigation.GoToAsync(NavigationRoutes.Registro);
 
     // Los comandos async no permiten ejecuciones simultáneas: el botón se
     // deshabilita solo mientras el login está en curso.
