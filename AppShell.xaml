@@ -14,9 +14,36 @@
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="{x:Static constants:NavigationRoutes.Login}" />
 
-    <ShellContent
-        Title="Inicio"
-        ContentTemplate="{DataTemplate views:vInicio}"
-        Route="{x:Static constants:NavigationRoutes.Inicio}" />
+    <!-- Barra de navegación inferior, visible después de iniciar sesión. -->
+    <TabBar
+        Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"
+        Shell.TabBarForegroundColor="{StaticResource PrimaryColor}"
+        Shell.TabBarTitleColor="{StaticResource PrimaryColor}"
+        Shell.TabBarUnselectedColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}">
+
+        <ShellContent
+            Title="Inicio"
+            Icon="ic_home.png"
+            ContentTemplate="{DataTemplate views:vInicio}"
+            Route="{x:Static constants:NavigationRoutes.Inicio}" />
+
+        <ShellContent
+            Title="Buscar"
+            Icon="ic_search.png"
+            ContentTemplate="{DataTemplate views:SearchPage}"
+            Route="{x:Static constants:NavigationRoutes.Buscar}" />
+
+        <ShellContent
+            Title="Favoritos"
+            Icon="ic_star.png"
+            ContentTemplate="{DataTemplate views:FavoritesPage}"
+            Route="{x:Static constants:NavigationRoutes.Favoritos}" />
+
+        <ShellContent
+            Title="Perfil"
+            Icon="ic_person.png"
+            ContentTemplate="{DataTemplate views:ProfilePage}"
+            Route="{x:Static constants:NavigationRoutes.Perfil}" />
+    </TabBar>
 
 </Shell>
