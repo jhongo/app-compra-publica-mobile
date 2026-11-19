@@ -35,7 +35,13 @@ public static class MauiProgram
         // Views y ViewModels: Transient (docs/arquitectura.md, decisión 2).
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
+
+        // Inicio y pestañas de la barra de navegación
+        builder.Services.AddTransient<HomeViewModel>();
         builder.Services.AddTransient<vInicio>();
+        builder.Services.AddTransient<SearchPage>();
+        builder.Services.AddTransient<FavoritesPage>();
+        builder.Services.AddTransient<ProfilePage>();
 
         // Registro
         builder.Services.AddTransient<RegisterViewModel>();

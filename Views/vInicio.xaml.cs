@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CompraPublicCercaMobile.ViewModels;
 
 namespace CompraPublicCercaMobile.Views;
 
 public partial class vInicio : ContentPage
 {
-    public vInicio()
+    public vInicio(HomeViewModel viewModel)
     {
         InitializeComponent();
+        BindingContext = viewModel;
     }
 }

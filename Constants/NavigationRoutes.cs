@@ -7,5 +7,10 @@ namespace CompraPublicCercaMobile.Constants;
 public static class NavigationRoutes
 {
     public const string Login = "login";
+
+    // Pestañas de la barra de navegación inferior.
     public const string Inicio = "inicio";
+    public const string Buscar = "buscar";
+    public const string Favoritos = "favoritos";
+    public const string Perfil = "perfil";
 }
