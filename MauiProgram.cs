@@ -36,10 +36,15 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
 
+
         // Inicio y pestañas de la barra de navegación
         builder.Services.AddTransient<HomeViewModel>();
         builder.Services.AddTransient<vInicio>();
+
+        // Búsqueda
+        builder.Services.AddTransient<SearchViewModel>();
         builder.Services.AddTransient<SearchPage>();
+
         builder.Services.AddTransient<FavoritesPage>();
         builder.Services.AddTransient<ProfilePage>();
 
