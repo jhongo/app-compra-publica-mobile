@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
@@ -5,24 +6,137 @@
              x:DataType="viewModels:LoginViewModel"
              Title="{Binding Title}"
              Shell.NavBarIsVisible="False">
-    <VerticalStackLayout Padding="24"
-                         Spacing="16"
-                         VerticalOptions="Center">
-        <Label Text="Compra Pública Cerca"
-               Style="{StaticResource Headline}" />
 
-        <Button Text="Iniciar sesión con Google"
-                Command="{Binding SignInWithGoogleCommand}" />
+    <ScrollView>
+        <VerticalStackLayout Padding="30,60,30,40"
+                             Spacing="20">
 
-        <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           IsVisible="{Binding IsBusy}" />
+            <!-- ── Título ── -->
+            <Label Text="COMPRA PÚBLICA&#10;CERCA"
+                   Style="{StaticResource Headline}"
+                   FontAttributes="Bold"
+                   Margin="0,0,0,16" />
 
-        <Label Text="{Binding StatusMessage}"
-               HorizontalTextAlignment="Center" />
+            <!-- ── Campo Usuario ── -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Usuario"
+                       FontAttributes="Bold"
+                       FontSize="14" />
+                <Border Style="{StaticResource LoginFieldBorderStyle}">
+                    <Entry Placeholder="Ingrese usuario"
+                           Margin="12,0"
+                           BackgroundColor="Transparent" />
+                </Border>
+            </VerticalStackLayout>
 
-        <Label Text="{Binding ErrorMessage}"
-               IsVisible="{Binding HasError}"
-               TextColor="{AppThemeBinding Light=#B3261E, Dark=#F2B8B5}"
-               HorizontalTextAlignment="Center" />
-    </VerticalStackLayout>
+            <!-- ── Campo Contraseña ── -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Contraseña"
+                       FontAttributes="Bold"
+                       FontSize="14" />
+                <Border Style="{StaticResource LoginFieldBorderStyle}">
+                    <Grid ColumnDefinitions="*,44">
+                        <Entry x:Name="PasswordEntry"
+                               Grid.Column="0"
+                               Placeholder="Ingrese contraseña"
+                               IsPassword="True"
+                               Margin="12,0,0,0"
+                               BackgroundColor="Transparent" />
+                        <!-- Ícono ojo (solo visual; lógica en issue separado) -->
+                        <ImageButton Grid.Column="1"
+                                     Source="ic_person.svg"
+                                     HeightRequest="22"
+                                     WidthRequest="22"
+                                     VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     BackgroundColor="Transparent"
+                                     Opacity="0.55" />
+                    </Grid>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- ── Recuperar contraseña ── -->
+            <Label Text="Recuperar contraseña"
+                   Style="{StaticResource LoginLinkStyle}"
+                   HorizontalOptions="End" />
+
+            <!-- ── Botón Ingresar ── -->
+            <Button Text="Ingresar"
+                    Style="{StaticResource LoginPrimaryButtonStyle}" />
+
+            <!-- ── Zona de estado / error (preservada del diseño anterior) ── -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center" />
+
+            <Label Text="{Binding StatusMessage}"
+                   HorizontalTextAlignment="Center"
+                   FontSize="13"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                               Dark={StaticResource Gray400}}" />
+
+            <Label Text="{Binding ErrorMessage}"
+                   IsVisible="{Binding HasError}"
+                   TextColor="{AppThemeBinding Light=#B3261E, Dark=#F2B8B5}"
+                   HorizontalTextAlignment="Center"
+                   FontSize="13" />
+
+            <!-- ── Separador "O" ── -->
+            <Grid ColumnDefinitions="*,Auto,*"
+                  ColumnSpacing="12"
+                  Margin="0,4">
+                <BoxView Grid.Column="0"
+                         HeightRequest="1"
+                         VerticalOptions="Center" />
+                <Label Grid.Column="1"
+                       Text="O"
+                       FontSize="13"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray400},
+                                                   Dark={StaticResource Gray500}}" />
+                <BoxView Grid.Column="2"
+                         HeightRequest="1"
+                         VerticalOptions="Center" />
+            </Grid>
+
+            <!-- ── Botón Google (funcional) ── -->
+            <Border Style="{StaticResource LoginGoogleBorderStyle}">
+                <!-- GestureRecognizer sobre el Border dispara el command -->
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SignInWithGoogleCommand}" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="32,*"
+                      ColumnSpacing="10"
+                      Padding="20,0">
+                    <Image Grid.Column="0"
+                           Source="google_icon.png"
+                           WidthRequest="26"
+                           HeightRequest="26"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="Iniciar Sesión con Google"
+                           TextColor="{StaticResource White}"
+                           FontAttributes="Bold"
+                           FontSize="15"
+                           VerticalOptions="Center"
+                           HorizontalTextAlignment="Center" />
+                </Grid>
+            </Border>
+
+            <!-- ── Pie: ¿No tienes cuenta? ── -->
+            <HorizontalStackLayout HorizontalOptions="Center"
+                                   Spacing="4"
+                                   Margin="0,8,0,0">
+                <Label Text="¿No tienes una cuenta?"
+                       FontSize="14"
+                       VerticalOptions="Center" />
+                <Label Text="Regístrate"
+                       Style="{StaticResource LoginLinkStyle}"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

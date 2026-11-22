@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
@@ -440,4 +440,58 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- ===== Estilos pantalla de Login ===== -->
+
+    <!-- Botón "Ingresar" (azul, ancho completo) -->
+    <Style x:Key="LoginPrimaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+    </Style>
+
+    <!-- Contenedor visual del botón Google en Login -->
+    <Style x:Key="LoginGoogleBorderStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource GoogleButtonColor}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Borde visual de campos de entrada -->
+    <Style x:Key="LoginFieldBorderStyle" TargetType="Border">
+        <Setter Property="Stroke"
+                Value="{AppThemeBinding Light={StaticResource LoginFieldBorderLight},
+                                        Dark={StaticResource LoginFieldBorderDark}}" />
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource LoginFieldBgLight},
+                                        Dark={StaticResource LoginFieldBgDark}}" />
+        <Setter Property="StrokeThickness" Value="1.5" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Texto de enlace (Recuperar contraseña / Regístrate) -->
+    <Style x:Key="LoginLinkStyle" TargetType="Label">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource LoginLinkColorLight},
+                                        Dark={StaticResource LoginLinkColorDark}}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextDecorations" Value="Underline" />
+    </Style>
+
 </ResourceDictionary>
