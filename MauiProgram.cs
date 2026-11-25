@@ -45,7 +45,10 @@ public static class MauiProgram
         builder.Services.AddTransient<SearchViewModel>();
         builder.Services.AddTransient<SearchPage>();
 
+        // Favoritos
+        builder.Services.AddTransient<FavoritesViewModel>();
         builder.Services.AddTransient<FavoritesPage>();
+
         builder.Services.AddTransient<ProfilePage>();
 
         // Registro
