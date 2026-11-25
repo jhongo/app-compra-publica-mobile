@@ -1,4 +1,5 @@
 ﻿
+using CompraPublicCercaMobile.Controls;
 using CompraPublicCercaMobile.Services;
 using CompraPublicCercaMobile.Services.Interfaces;
 using CompraPublicCercaMobile.ViewModels;
@@ -20,6 +21,21 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
+        // BorderlessEntry: quita el borde nativo para que solo se vea el Border del diseño.
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("Borderless", (handler, view) =>
+        {
+            if (view is not BorderlessEntry)
+            {
+                return;
+            }
+#if IOS || MACCATALYST
+            handler.PlatformView.BorderStyle = UIKit.UITextBorderStyle.None;
+#elif ANDROID
+            handler.PlatformView.BackgroundTintList =
+                Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+#endif
+        });
+
 #if ANDROID
         builder.Services.AddSingleton<IAuthService, AndroidAuthService>();
 #elif IOS
@@ -36,10 +52,15 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
 
+
         // Inicio y pestañas de la barra de navegación
         builder.Services.AddTransient<HomeViewModel>();
         builder.Services.AddTransient<vInicio>();
+
+        // Búsqueda
+        builder.Services.AddTransient<SearchViewModel>();
         builder.Services.AddTransient<SearchPage>();
+
         builder.Services.AddTransient<FavoritesPage>();
         builder.Services.AddTransient<ProfilePage>();
 

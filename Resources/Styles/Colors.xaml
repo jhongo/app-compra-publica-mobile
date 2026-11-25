@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
@@ -51,4 +51,20 @@
     <Color x:Key="RegisterBlue">#2563EB</Color>
     <Color x:Key="RegisterGreen">#16A34A</Color>
     <Color x:Key="RegisterRed">#DC2626</Color>
+
+    <!-- Paleta de marca Compra Pública (manual de marca: LEEME.md) -->
+    <!-- Primario: botones principales, encabezados. Contraste 13,9:1 sobre blanco. -->
+    <Color x:Key="BrandPrimary">#202D42</Color>
+    <!-- Secundario: enlaces, texto secundario. Contraste 6,8:1 sobre blanco (AA). -->
+    <Color x:Key="BrandSecondary">#445B74</Color>
+    <!-- Terciario: bordes, divisores, iconos, placeholders. NO usar para texto (3,4:1). -->
+    <Color x:Key="BrandTertiary">#798BA8</Color>
+    <!-- Tinta: texto principal y fondo en modo oscuro. -->
+    <Color x:Key="BrandInk">#0D121E</Color>
+    <!-- Crema: fondo de pantallas y texto sobre el primario. -->
+    <Color x:Key="BrandCream">#EFEBDA</Color>
+
+    <!-- Botón de Google según su guía de marca (tema claro). -->
+    <Color x:Key="GoogleButtonBorder">#747775</Color>
+    <Color x:Key="GoogleButtonText">#1F1F1F</Color>
 </ResourceDictionary>

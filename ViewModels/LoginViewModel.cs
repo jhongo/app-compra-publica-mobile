@@ -13,9 +13,10 @@ public partial class LoginViewModel : BaseViewModel
     private readonly INavigationService _navigation;
     private readonly ILogger<LoginViewModel> _logger;
 
-    /// <summary>Mensaje informativo (no de error) que se muestra bajo el botón.</summary>
+    /// <summary>Mensaje informativo (no de error) que se muestra bajo el botón.
+    /// Vacío al inicio: el encabezado de la pantalla ya indica qué hacer.</summary>
     [ObservableProperty]
-    private string _statusMessage = "Inicia sesión para continuar.";
+    private string _statusMessage = string.Empty;
 
     // TODO: usar en el login con usuario y contraseña cuando exista ese servicio.
     [ObservableProperty]
@@ -42,6 +43,11 @@ public partial class LoginViewModel : BaseViewModel
 
     [RelayCommand]
     private void TogglePasswordVisibility() => IsPasswordHidden = !IsPasswordHidden;
+
+    // TEMPORAL: solo para revisar las vistas. Entra a Inicio sin validar usuario
+    // ni contraseña. Reemplazar cuando exista el login con usuario y contraseña.
+    [RelayCommand]
+    private Task LoginAsync() => _navigation.GoToAsync($"//{NavigationRoutes.Inicio}");
 
     [RelayCommand]
     private Task GoToRegisterAsync() => _navigation.GoToAsync(NavigationRoutes.Registro);

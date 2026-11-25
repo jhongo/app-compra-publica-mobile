@@ -1,104 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:CompraPublicCercaMobile.Controls"
              xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
              x:Class="CompraPublicCercaMobile.Views.LoginPage"
              x:DataType="viewModels:LoginViewModel"
              Title="{Binding Title}"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BrandCream}, Dark={StaticResource BrandInk}}">
 
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="20" VerticalOptions="Center">
+        <VerticalStackLayout Padding="24,48,24,32"
+                             Spacing="0"
+                             VerticalOptions="Center">
 
-            <!-- Título centrado en dos líneas -->
-            <Label Text="COMPRA PÚBLICA&#10;CERCA"
-                   FontSize="24"
-                   FontAttributes="Bold"
+            <!-- ===== Marca ===== -->
+            <Image Source="{AppThemeBinding Light=brand_isotipo_azul.png, Dark=brand_isotipo_crema.png}"
+                   WidthRequest="88"
+                   HeightRequest="88"
+                   HorizontalOptions="Center"
+                   SemanticProperties.Description="Logotipo de Compra Pública" />
+
+            <Label Text="COMPRA PÚBLICA CERCA"
+                   Margin="0,16,0,0"
+                   FontFamily="OpenSansSemibold"
+                   FontSize="16"
+                   CharacterSpacing="1.6"
                    HorizontalTextAlignment="Center"
-                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
 
-            <!-- Campo Usuario -->
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Usuario" FontSize="14" FontAttributes="Bold" />
-                <Entry Placeholder="Ingrese usuario"
-                       Text="{Binding Username}" />
-            </VerticalStackLayout>
+            <Label Text="CONCURSOS PÚBLICOS DEL SERCOP"
+                   Margin="0,4,0,0"
+                   FontSize="11"
+                   CharacterSpacing="1.8"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
 
-            <!-- Campo Contraseña -->
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Contraseña" FontSize="14" FontAttributes="Bold" />
-                <Grid ColumnDefinitions="*, Auto">
-                    <Entry Grid.Column="0"
-                           Placeholder="Ingrese contraseña"
+            <!-- ===== Encabezado del formulario ===== -->
+            <Label Text="Inicia sesión"
+                   Margin="0,40,0,0"
+                   FontFamily="OpenSansSemibold"
+                   FontSize="26"
+                   SemanticProperties.HeadingLevel="Level1"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+
+            <Label Text="Encuentra concursos públicos cerca de ti."
+                   Margin="0,4,0,0"
+                   FontSize="15"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+
+            <!-- ===== Usuario ===== -->
+            <Label Text="Usuario"
+                   Margin="0,28,0,8"
+                   Style="{StaticResource LoginFieldLabelStyle}" />
+            <Border Style="{StaticResource LoginFieldBorderStyle}">
+                <controls:BorderlessEntry Placeholder="Correo o nombre de usuario"
+                       Text="{Binding Username}"
+                       Keyboard="Email"
+                       IsSpellCheckEnabled="False"
+                       IsTextPredictionEnabled="False"
+                       ReturnType="Next"
+                       Style="{StaticResource LoginEntryStyle}"
+                       SemanticProperties.Description="Usuario" />
+            </Border>
+
+            <!-- ===== Contraseña ===== -->
+            <Label Text="Contraseña"
+                   Margin="0,20,0,8"
+                   Style="{StaticResource LoginFieldLabelStyle}" />
+            <Border Style="{StaticResource LoginFieldBorderStyle}">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                    <controls:BorderlessEntry Grid.Column="0"
+                           Placeholder="Ingresa tu contraseña"
+                           Text="{Binding Password}"
                            IsPassword="{Binding IsPasswordHidden}"
-                           Text="{Binding Password}" />
-                    <Button Grid.Column="1"
-                            Text="👁"
-                            BackgroundColor="Transparent"
-                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
-                            Command="{Binding TogglePasswordVisibilityCommand}" />
+                           IsSpellCheckEnabled="False"
+                           IsTextPredictionEnabled="False"
+                           ReturnType="Go"
+                           ReturnCommand="{Binding LoginCommand}"
+                           Style="{StaticResource LoginEntryStyle}"
+                           SemanticProperties.Description="Contraseña" />
+
+                    <!-- Mostrar / ocultar contraseña: área táctil de 44x44 -->
+                    <ImageButton Grid.Column="1"
+                                 Source="ic_eye.png"
+                                 WidthRequest="44"
+                                 HeightRequest="44"
+                                 Padding="10"
+                                 BackgroundColor="Transparent"
+                                 VerticalOptions="Center"
+                                 Command="{Binding TogglePasswordVisibilityCommand}"
+                                 SemanticProperties.Description="Mostrar contraseña">
+                        <ImageButton.Triggers>
+                            <DataTrigger TargetType="ImageButton"
+                                         Binding="{Binding IsPasswordHidden}"
+                                         Value="False">
+                                <Setter Property="Source" Value="ic_eye_off.png" />
+                                <Setter Property="SemanticProperties.Description" Value="Ocultar contraseña" />
+                            </DataTrigger>
+                        </ImageButton.Triggers>
+                    </ImageButton>
                 </Grid>
-            </VerticalStackLayout>
+            </Border>
 
-            <!-- Enlace Recuperar contraseña alineado a la derecha -->
             <!-- TODO: conectar cuando exista la recuperación de contraseña. -->
-            <Label Text="Recuperar contraseña"
+            <Label Text="¿Olvidaste tu contraseña?"
+                   Margin="0,4,0,0"
                    HorizontalOptions="End"
-                   TextColor="{StaticResource PrimaryColor}"
-                   TextDecorations="Underline" />
+                   Style="{StaticResource LoginLinkStyle}" />
 
-            <!-- Botón principal Ingresar -->
-            <!-- TODO: conectar cuando exista el login con usuario y contraseña. -->
+            <!-- ===== Acciones ===== -->
+            <!-- TEMPORAL: entra a Inicio sin validar datos (ver LoginViewModel.LoginAsync). -->
             <Button Text="Ingresar"
-                    BackgroundColor="{StaticResource PrimaryColor}"
-                    TextColor="{StaticResource White}"
-                    CornerRadius="8" />
+                    Margin="0,12,0,0"
+                    Style="{StaticResource LoginPrimaryButtonStyle}"
+                    Command="{Binding LoginCommand}" />
 
-            <!-- Separador horizontal con la letra "O" al centro -->
-            <Grid ColumnDefinitions="*, Auto, *" ColumnSpacing="10" VerticalOptions="Center">
-                <BoxView Grid.Column="0" HeightRequest="1" Color="{StaticResource SeparatorColor}" VerticalOptions="Center" />
-                <Label Grid.Column="1" Text="O" FontSize="14" TextColor="{StaticResource SeparatorColor}" FontAttributes="Bold" />
-                <BoxView Grid.Column="2" HeightRequest="1" Color="{StaticResource SeparatorColor}" VerticalOptions="Center" />
+            <!-- Separador -->
+            <Grid ColumnDefinitions="*,Auto,*"
+                  ColumnSpacing="12"
+                  Margin="0,24">
+                <BoxView Grid.Column="0"
+                         HeightRequest="1"
+                         VerticalOptions="Center"
+                         Color="{StaticResource BrandTertiary}" />
+                <Label Grid.Column="1"
+                       Text="o continúa con"
+                       FontSize="13"
+                       TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+                <BoxView Grid.Column="2"
+                         HeightRequest="1"
+                         VerticalOptions="Center"
+                         Color="{StaticResource BrandTertiary}" />
             </Grid>
 
-            <!-- Botón Iniciar Sesión con Google -->
-            <Button Text="Iniciar Sesión con Google"
-                    BackgroundColor="{StaticResource GoogleButtonColor}"
-                    TextColor="{StaticResource White}"
-                    CornerRadius="8"
-                    Command="{Binding SignInWithGoogleCommand}">
-                <Button.ImageSource>
-                    <FontImageSource Glyph="G" Color="White" Size="18" />
-                </Button.ImageSource>
-            </Button>
+            <!-- Google: el logo va encima del botón y no intercepta los toques -->
+            <Grid>
+                <Button Text="Continuar con Google"
+                        Style="{StaticResource LoginGoogleButtonStyle}"
+                        Command="{Binding SignInWithGoogleCommand}" />
+                <Image Source="google_icon.png"
+                       WidthRequest="20"
+                       HeightRequest="20"
+                       Margin="20,0,0,0"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Center"
+                       InputTransparent="True" />
+            </Grid>
 
-            <!-- Texto "¿No tienes una cuenta?" + enlace "Regístrate" -->
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
-                <Label Text="¿No tienes una cuenta?" />
+            <!-- Registro -->
+            <HorizontalStackLayout Margin="0,20,0,0"
+                                   HorizontalOptions="Center"
+                                   Spacing="4">
+                <Label Text="¿No tienes una cuenta?"
+                       FontSize="14"
+                       VerticalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
                 <Label Text="Regístrate"
-                       TextColor="{StaticResource PrimaryColor}"
-                       FontAttributes="Bold">
+                       Style="{StaticResource LoginLinkStyle}">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding GoToRegisterCommand}" />
                     </Label.GestureRecognizers>
                 </Label>
             </HorizontalStackLayout>
 
-            <!-- Estado del inicio de sesión -->
-            <VerticalStackLayout Spacing="10" Margin="0,10,0,0">
-                <ActivityIndicator IsRunning="{Binding IsBusy}"
-                                   IsVisible="{Binding IsBusy}"
-                                   HorizontalOptions="Center"
-                                   Color="{StaticResource PrimaryColor}" />
-                <Label Text="{Binding StatusMessage}"
-                       HorizontalTextAlignment="Center"
-                       TextColor="{StaticResource PrimaryColor}"
-                       FontSize="13" />
-                <Label Text="{Binding ErrorMessage}"
-                       IsVisible="{Binding HasError}"
-                       TextColor="{AppThemeBinding Light=#B3261E, Dark=#F2B8B5}"
-                       HorizontalTextAlignment="Center"
-                       FontSize="13" />
-            </VerticalStackLayout>
+            <!-- ===== Estado ===== -->
+            <ActivityIndicator Margin="0,12,0,0"
+                               IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center"
+                               Color="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
+
+            <Label Text="{Binding StatusMessage}"
+                   Margin="0,8,0,0"
+                   FontSize="13"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+
+            <Label Text="{Binding ErrorMessage}"
+                   IsVisible="{Binding HasError}"
+                   Margin="0,8,0,0"
+                   FontSize="13"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{AppThemeBinding Light=#B3261E, Dark=#F2B8B5}" />
 
         </VerticalStackLayout>
     </ScrollView>
