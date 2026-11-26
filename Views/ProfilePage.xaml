@@ -1,18 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!-- Pantalla provisional: se diseñará en su propio issue. -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:components="clr-namespace:CompraPublicCercaMobile.Views.Components"
+             xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
              x:Class="CompraPublicCercaMobile.Views.ProfilePage"
-             Title="Perfil"
-             Shell.NavBarIsVisible="False">
-    <VerticalStackLayout Padding="24" Spacing="8" VerticalOptions="Center">
-        <Label Text="Perfil"
-               FontSize="24"
-               FontAttributes="Bold"
-               HorizontalTextAlignment="Center" />
-        <Label Text="Próximamente"
-               TextColor="{StaticResource Gray500}"
-               HorizontalTextAlignment="Center" />
-    </VerticalStackLayout>
+             x:DataType="viewModels:ProfileViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BrandBackground}, Dark={StaticResource BrandInk}}">
+
+    <ContentPage.Resources>
+        <!-- Grupo de filas: una sola superficie, sin contorno -->
+        <Style x:Key="GroupBorderStyle" TargetType="Border">
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource BrandSurfaceDark}}" />
+        </Style>
+        <!-- Título pequeño encima de cada grupo -->
+        <Style x:Key="GroupCaptionStyle" TargetType="Label">
+            <Setter Property="FontFamily" Value="OpenSansSemibold" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Margin" Value="16,28,0,8" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+        </Style>
+        <!-- Divisor con sangría: empieza donde empieza el texto, no bajo el icono -->
+        <Style x:Key="RowDividerStyle" TargetType="BoxView">
+            <Setter Property="HeightRequest" Value="1" />
+            <Setter Property="Margin" Value="52,0,0,0" />
+            <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource BrandBackground}, Dark={StaticResource BrandInk}}" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <!-- Margen inferior amplio: la barra de pestañas de iOS 26 flota sobre el contenido. -->
+        <VerticalStackLayout Padding="24,16,24,120" Spacing="0">
+
+            <Label Text="{Binding Title}"
+                   FontFamily="OpenSansSemibold"
+                   FontSize="26"
+                   SemanticProperties.HeadingLevel="Level1"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+
+            <!-- ===== Identidad ===== -->
+            <VerticalStackLayout Margin="0,28,0,0" Spacing="4" HorizontalOptions="Center">
+                <Border WidthRequest="88"
+                        HeightRequest="88"
+                        StrokeThickness="0"
+                        StrokeShape="Ellipse"
+                        HorizontalOptions="Center"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}"
+                        SemanticProperties.Description="Foto de perfil">
+                    <Label Text="{Binding Initial}"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="34"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource BrandCream}, Dark={StaticResource BrandPrimary}}" />
+                </Border>
+                <Label Text="{Binding DisplayName}"
+                       Margin="0,12,0,0"
+                       FontFamily="OpenSansSemibold"
+                       FontSize="20"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+                <Label Text="{Binding Email}"
+                       FontSize="14"
+                       HorizontalTextAlignment="Center"
+                       Style="{StaticResource SecondaryTextStyle}" />
+            </VerticalStackLayout>
+
+            <!-- ===== Actividad ===== -->
+            <Label Text="Mi actividad" Style="{StaticResource GroupCaptionStyle}" />
+            <Border Style="{StaticResource GroupBorderStyle}">
+                <VerticalStackLayout>
+                    <!-- TODO: conectar cuando exista la pantalla de postulaciones. -->
+                    <components:ProfileRow Icon="ic_row_work.png"
+                                           Text="Mis postulaciones"
+                                           Detail="Próximamente"
+                                           ShowChevron="False" />
+                    <BoxView Style="{StaticResource RowDividerStyle}" />
+                    <components:ProfileRow Icon="ic_fav_off.png"
+                                           Text="Favoritos"
+                                           Detail="{Binding FavoritesText}"
+                                           Command="{Binding OpenFavoritesCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ===== Preferencias ===== -->
+            <Label Text="Preferencias" Style="{StaticResource GroupCaptionStyle}" />
+            <Border Style="{StaticResource GroupBorderStyle}">
+                <VerticalStackLayout>
+                    <components:ProfileRow Icon="ic_field_place.png"
+                                           Text="Mi provincia"
+                                           Detail="{Binding ProvinceText}"
+                                           Command="{Binding ChangeLocationCommand}" />
+                    <!-- Inicio rápido: solo si el teléfono tiene Face ID / huella configurados -->
+                    <VerticalStackLayout IsVisible="{Binding IsBiometricAvailable}">
+                        <BoxView Style="{StaticResource RowDividerStyle}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto"
+                              ColumnSpacing="14"
+                              Padding="16,0,12,0"
+                              MinimumHeightRequest="56">
+                            <Image Source="ic_row_fingerprint.png" WidthRequest="22" HeightRequest="22" VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="{Binding BiometricText}"
+                                   FontSize="16"
+                                   VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+                            <Switch Grid.Column="2"
+                                    IsToggled="{Binding IsBiometricEnabled}"
+                                    VerticalOptions="Center"
+                                    OnColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandSecondary}}"
+                                    SemanticProperties.Description="{Binding BiometricText}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                    <BoxView Style="{StaticResource RowDividerStyle}" />
+                    <!-- TODO: conectar cuando existan las pantallas de notificaciones y configuración. -->
+                    <components:ProfileRow Icon="ic_row_bell.png"
+                                           Text="Notificaciones"
+                                           Detail="Próximamente"
+                                           ShowChevron="False" />
+                    <BoxView Style="{StaticResource RowDividerStyle}" />
+                    <components:ProfileRow Icon="ic_row_settings.png"
+                                           Text="Configuración"
+                                           Detail="Próximamente"
+                                           ShowChevron="False" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ===== Cerrar sesión: grupo aparte, acción destructiva en rojo ===== -->
+            <Border Margin="0,28,0,0" Style="{StaticResource GroupBorderStyle}">
+                <Grid MinimumHeightRequest="56" SemanticProperties.Description="Cerrar sesión">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SignOutCommand}" />
+                    </Grid.GestureRecognizers>
+                    <Label Text="Cerrar sesión"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="16"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           TextColor="{AppThemeBinding Light=#B3261E, Dark=#F2B8B5}" />
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                       IsVisible="{Binding IsBusy}"
+                                       HorizontalOptions="End"
+                                       Margin="0,0,16,0"
+                                       WidthRequest="20"
+                                       HeightRequest="20"
+                                       Color="{AppThemeBinding Light=#B3261E, Dark=#F2B8B5}" />
+                </Grid>
+            </Border>
+
+            <Label Text="{Binding VersionText, StringFormat='Compra Pública Cerca · {0}'}"
+                   Margin="0,24,0,0"
+                   FontSize="12"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{StaticResource BrandTertiary}" />
+            <Label Text="Datos abiertos de SERCOP · Licencia CC BY 3.0 EC"
+                   Margin="0,2,0,0"
+                   FontSize="11"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{StaticResource BrandTertiary}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

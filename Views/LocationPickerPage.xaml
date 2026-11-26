@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:CompraPublicCercaMobile.Controls"
+             xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
+             x:Class="CompraPublicCercaMobile.Views.LocationPickerPage"
+             x:DataType="viewModels:LocationPickerViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BrandBackground}, Dark={StaticResource BrandInk}}">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- ===== Barra superior ===== -->
+        <Grid Padding="14,8,24,0" ColumnDefinitions="Auto,*" ColumnSpacing="4">
+            <ImageButton Source="{AppThemeBinding Light=ic_back_dark.png, Dark=ic_back_light.png}"
+                         WidthRequest="44"
+                         HeightRequest="44"
+                         Padding="10"
+                         BackgroundColor="Transparent"
+                         Command="{Binding GoBackCommand}"
+                         SemanticProperties.Description="Volver" />
+        </Grid>
+
+        <!-- ===== Encabezado y buscador ===== -->
+        <VerticalStackLayout Grid.Row="1" Padding="24,4,24,12" Spacing="6">
+            <Label Text="¿Dónde buscas oportunidades?"
+                   FontFamily="OpenSansSemibold"
+                   FontSize="24"
+                   SemanticProperties.HeadingLevel="Level1"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+            <Label Text="Mostraremos primero los procesos de tu provincia. Puedes cambiarla cuando quieras."
+                   Style="{StaticResource SecondaryTextStyle}"
+                   FontSize="14" />
+
+            <Border Margin="0,12,0,0" Style="{StaticResource AuthFieldBorderStyle}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Image Source="ic_field_search.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry Grid.Column="1"
+                                              Placeholder="Buscar provincia"
+                                              Text="{Binding SearchText}"
+                                              IsSpellCheckEnabled="False"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Buscar provincia" />
+                </Grid>
+            </Border>
+        </VerticalStackLayout>
+
+        <!-- ===== Lista de provincias ===== -->
+        <ScrollView Grid.Row="2">
+            <Border Margin="24,0,24,32"
+                    Padding="0"
+                    VerticalOptions="Start"
+                    Style="{StaticResource CardBorderStyle}">
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Provinces}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:ProvinceItemViewModel">
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  ColumnSpacing="12"
+                                  Padding="16,0"
+                                  MinimumHeightRequest="52"
+                                  SemanticProperties.Description="{Binding Name}">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding SelectCommand, Source={RelativeSource AncestorType={x:Type viewModels:LocationPickerViewModel}}, x:DataType=viewModels:LocationPickerViewModel}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+
+                                <Image Source="ic_field_place.png"
+                                       WidthRequest="18"
+                                       HeightRequest="18"
+                                       VerticalOptions="Center" />
+                                <Label Grid.Column="1"
+                                       Text="{Binding Name}"
+                                       FontSize="15"
+                                       VerticalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                            <Setter Property="FontFamily" Value="OpenSansSemibold" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Image Grid.Column="2"
+                                       Source="ic_check.png"
+                                       WidthRequest="20"
+                                       HeightRequest="20"
+                                       VerticalOptions="Center"
+                                       IsVisible="{Binding IsSelected}"
+                                       SemanticProperties.Description="Seleccionada" />
+
+                                <!-- Separador entre filas -->
+                                <BoxView Grid.ColumnSpan="3"
+                                         HeightRequest="1"
+                                         VerticalOptions="End"
+                                         Margin="30,0,0,0"
+                                         Color="{AppThemeBinding Light={StaticResource BrandFieldBorder}, Dark={StaticResource BrandPrimary}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+        </ScrollView>
+    </Grid>
+</ContentPage>

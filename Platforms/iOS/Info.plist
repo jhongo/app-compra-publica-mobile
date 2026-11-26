@@ -52,6 +52,17 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Usamos Face ID para que inicies sesión rápido sin escribir tu contraseña.</string>
+	<!-- iOS 14+ pide permiso para hablar con equipos del Wi-Fi (la API en la Mac, desde un iPhone físico). -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Se conecta al servidor de desarrollo en tu red local.</string>
+	<!-- Permite http solo hacia localhost y la red local (API de desarrollo). El resto exige https. -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
 </dict>

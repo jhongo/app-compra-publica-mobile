@@ -410,51 +410,25 @@
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
 
-    <!-- Botón para validar correo -->
-    <Style x:Key="ValidateButtonStyle" TargetType="Button">
-        <Setter Property="BackgroundColor"
-            Value="{StaticResource RegisterBlue}" />
-        <Setter Property="TextColor"
-            Value="{StaticResource White}" />
-        <Setter Property="CornerRadius" Value="8" />
-    </Style>
+    <!-- ===== Estilos de autenticación: Login y Registro (estilo minimalista) ===== -->
 
-    <!-- Botón principal de registro -->
-    <Style x:Key="RegisterButtonStyle" TargetType="Button">
-        <Setter Property="BackgroundColor"
-            Value="{StaticResource RegisterGreen}" />
-        <Setter Property="TextColor"
-            Value="{StaticResource White}" />
-        <Setter Property="CornerRadius" Value="8" />
-    </Style>
-
-    <!-- Contenedor visual del botón Google -->
-    <Style x:Key="GoogleRegisterBorderStyle"
-       TargetType="Border">
-        <Setter Property="BackgroundColor"
-            Value="{StaticResource RegisterRed}" />
-        <Setter Property="StrokeThickness" Value="0" />
-        <Setter Property="StrokeShape">
-            <Setter.Value>
-                <RoundRectangle CornerRadius="8" />
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- ===== Estilos pantalla de Login ===== -->
-
-    <!-- Paleta de marca: ver Colors.xaml. Alturas mínimas de 48-52 para cumplir
+    <!-- Paleta de marca: ver Colors.xaml. Alturas mínimas de 48-54 para cumplir
          el área táctil de Material (48dp) y Apple HIG (44pt). -->
 
     <!-- Botón principal "Ingresar" -->
-    <Style x:Key="LoginPrimaryButtonStyle" TargetType="Button">
+    <Style x:Key="AuthPrimaryButtonStyle" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandCream}, Dark={StaticResource BrandInk}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource BrandInk}}" />
         <Setter Property="FontFamily" Value="OpenSansSemibold" />
         <Setter Property="FontSize" Value="16" />
-        <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="HeightRequest" Value="54" />
         <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource BrandPrimary}" Opacity="0.22" Radius="16" Offset="0,6" />
+            </Setter.Value>
+        </Setter>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -474,59 +448,160 @@
         </Setter>
     </Style>
 
-    <!-- Botón "Continuar con Google" (neutro, según la guía de marca de Google) -->
-    <Style x:Key="LoginGoogleButtonStyle" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
-        <Setter Property="TextColor" Value="{StaticResource GoogleButtonText}" />
-        <Setter Property="BorderColor" Value="{StaticResource GoogleButtonBorder}" />
-        <Setter Property="BorderWidth" Value="1" />
-        <Setter Property="FontFamily" Value="OpenSansSemibold" />
-        <Setter Property="FontSize" Value="15" />
-        <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="HeightRequest" Value="52" />
-        <Setter Property="HorizontalOptions" Value="Fill" />
+    <!-- Botón social cuadrado (solo icono). Usar siempre con SemanticProperties.Description. -->
+    <Style x:Key="AuthSocialButtonStyle" TargetType="ImageButton">
+        <!-- El icono de Google ya trae su propio círculo: sin mosaico ni borde alrededor. -->
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="27" />
+        <Setter Property="WidthRequest" Value="54" />
+        <Setter Property="HeightRequest" Value="54" />
+        <Setter Property="Padding" Value="0" />
     </Style>
 
-    <!-- Contenedor de los campos de texto -->
-    <Style x:Key="LoginFieldBorderStyle" TargetType="Border">
-        <Setter Property="Stroke" Value="{StaticResource BrandTertiary}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource BrandPrimary}}" />
-        <Setter Property="StrokeThickness" Value="1" />
-        <Setter Property="Padding" Value="14,0,4,0" />
-        <Setter Property="MinimumHeightRequest" Value="52" />
+    <!-- Contenedor de los campos de texto: relleno tonal sin contorno. El contorno es
+         transparente y solo aparece al enfocar (los triggers de cada página cambian Stroke). -->
+    <Style x:Key="AuthFieldBorderStyle" TargetType="Border">
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BrandFieldFill}, Dark={StaticResource BrandFieldFillDark}}" />
+        <Setter Property="StrokeThickness" Value="1.5" />
+        <Setter Property="Padding" Value="16,0,4,0" />
+        <Setter Property="MinimumHeightRequest" Value="54" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="StrokeShape">
             <Setter.Value>
-                <RoundRectangle CornerRadius="12" />
+                <RoundRectangle CornerRadius="14" />
             </Setter.Value>
         </Setter>
     </Style>
 
-    <!-- Campo de texto dentro de LoginFieldBorderStyle -->
-    <Style x:Key="LoginEntryStyle" TargetType="Entry">
+    <!-- Icono a la izquierda de cada campo -->
+    <Style x:Key="AuthFieldIconStyle" TargetType="Image">
+        <Setter Property="WidthRequest" Value="20" />
+        <Setter Property="HeightRequest" Value="20" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <!-- Campo de texto dentro de AuthFieldBorderStyle -->
+    <Style x:Key="AuthEntryStyle" TargetType="Entry">
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
         <Setter Property="PlaceholderColor" Value="{StaticResource BrandTertiary}" />
-        <Setter Property="FontSize" Value="16" />
-        <Setter Property="MinimumHeightRequest" Value="52" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="MinimumHeightRequest" Value="54" />
         <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
-    <!-- Etiqueta encima de cada campo -->
-    <Style x:Key="LoginFieldLabelStyle" TargetType="Label">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
-        <Setter Property="FontFamily" Value="OpenSansSemibold" />
-        <Setter Property="FontSize" Value="14" />
+    <!-- Error bajo un campo del formulario. Se oculta solo cuando el texto está vacío. -->
+    <Style x:Key="FieldErrorStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Margin" Value="4,6,0,0" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=#B3261E, Dark=#F2B8B5}" />
+        <Style.Triggers>
+            <Trigger TargetType="Label" Property="Text" Value="">
+                <Setter Property="IsVisible" Value="False" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Ayuda bajo un campo (p. ej. requisitos de la contraseña). Mismo comportamiento que FieldErrorStyle. -->
+    <Style x:Key="FieldHintStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Margin" Value="4,6,0,0" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+        <Style.Triggers>
+            <Trigger TargetType="Label" Property="Text" Value="">
+                <Setter Property="IsVisible" Value="False" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!-- Enlaces de texto (¿Olvidaste tu contraseña? / Regístrate) -->
-    <Style x:Key="LoginLinkStyle" TargetType="Label">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+    <Style x:Key="AuthLinkStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
         <Setter Property="FontFamily" Value="OpenSansSemibold" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="MinimumHeightRequest" Value="44" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+    <!-- ===== Componentes compartidos de la app (paleta de marca) ===== -->
+
+    <!-- Tarjeta sin contorno: la separa del fondo su superficie y una sombra muy difusa -->
+    <Style x:Key="CardBorderStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource BrandSurfaceDark}}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource BrandPrimary}" Opacity="0.06" Radius="20" Offset="0,6" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Etiqueta pequeña (tipo de proceso, estado) -->
+    <Style x:Key="TagBorderStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BrandFieldFill}, Dark={StaticResource BrandPrimary}}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TagLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandCream}}" />
+    </Style>
+
+    <!-- Título de sección dentro de una pantalla -->
+    <Style x:Key="SectionTitleStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+        <Setter Property="SemanticProperties.HeadingLevel" Value="Level2" />
+    </Style>
+
+    <!-- Texto secundario (subtítulos, metadatos) -->
+    <Style x:Key="SecondaryTextStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+    </Style>
+
+    <!-- Botón secundario tonal: relleno suave, sin contorno -->
+    <Style x:Key="TonalButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BrandFieldFill}, Dark={StaticResource BrandFieldFillDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="HeightRequest" Value="48" />
+    </Style>
+
+    <!-- Chip de opción sin contorno: relleno tonal; el seleccionado usa el primario (trigger en cada página) -->
+    <Style x:Key="ChipBorderStyle" TargetType="Border">
+        <Setter Property="MinimumHeightRequest" Value="40" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BrandFieldFill}, Dark={StaticResource BrandFieldFillDark}}" />
+    </Style>
+    <Style x:Key="ChipLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
     </Style>
 
 </ResourceDictionary>

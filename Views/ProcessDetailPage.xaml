@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:CompraPublicCercaMobile.Models"
+             xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
+             x:Class="CompraPublicCercaMobile.Views.ProcessDetailPage"
+             x:DataType="viewModels:ProcessDetailViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BrandBackground}, Dark={StaticResource BrandInk}}">
+
+    <ContentPage.Resources>
+        <!-- Fila "etiqueta / valor" de la ficha del proceso -->
+        <Style x:Key="FieldLabelStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+        </Style>
+        <Style x:Key="FieldValueStyle" TargetType="Label">
+            <Setter Property="FontFamily" Value="OpenSansSemibold" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ===== Barra superior ===== -->
+        <Grid Padding="14,8,14,8" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="4">
+            <ImageButton Source="{AppThemeBinding Light=ic_back_dark.png, Dark=ic_back_light.png}"
+                         WidthRequest="44"
+                         HeightRequest="44"
+                         Padding="10"
+                         BackgroundColor="Transparent"
+                         Command="{Binding GoBackCommand}"
+                         SemanticProperties.Description="Volver" />
+            <Label Grid.Column="1"
+                   Text="{Binding Title}"
+                   FontFamily="OpenSansSemibold"
+                   FontSize="17"
+                   VerticalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+            <ImageButton Grid.Column="2"
+                         WidthRequest="44"
+                         HeightRequest="44"
+                         Padding="10"
+                         BackgroundColor="Transparent"
+                         Source="ic_fav_off.png"
+                         IsVisible="{Binding HasDetail}"
+                         Command="{Binding ToggleFavoriteCommand}"
+                         SemanticProperties.Description="{Binding FavoriteDescription}">
+                <ImageButton.Triggers>
+                    <DataTrigger TargetType="ImageButton" Binding="{Binding IsFavorite}" Value="True">
+                        <Setter Property="Source" Value="{AppThemeBinding Light=ic_fav_on_dark.png, Dark=ic_fav_on_light.png}" />
+                    </DataTrigger>
+                </ImageButton.Triggers>
+            </ImageButton>
+        </Grid>
+
+        <!-- ===== Cargando ===== -->
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           Color="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
+
+        <!-- ===== Error ===== -->
+        <VerticalStackLayout Grid.Row="1"
+                             Padding="32"
+                             Spacing="8"
+                             VerticalOptions="Center"
+                             IsVisible="{Binding HasError}">
+            <Image Source="ic_cloud_off.png" WidthRequest="44" HeightRequest="44" HorizontalOptions="Center" />
+            <Label Text="{Binding ErrorMessage}"
+                   Style="{StaticResource SecondaryTextStyle}"
+                   FontSize="15"
+                   HorizontalTextAlignment="Center" />
+            <Button Text="Reintentar"
+                    Margin="0,8,0,0"
+                    Padding="32,0"
+                    HorizontalOptions="Center"
+                    Style="{StaticResource TonalButtonStyle}"
+                    Command="{Binding LoadCommand}" />
+        </VerticalStackLayout>
+
+        <!-- ===== Contenido ===== -->
+        <ScrollView Grid.Row="1" IsVisible="{Binding HasDetail}">
+            <VerticalStackLayout Padding="24,8,24,32" Spacing="16">
+
+                <!-- Encabezado del proceso -->
+                <VerticalStackLayout Spacing="10">
+                    <!-- FlexLayout con Wrap: un tipo de procedimiento largo pasa a otra línea en vez de salirse de la pantalla -->
+                    <FlexLayout Wrap="Wrap" AlignItems="Start" AlignContent="Start">
+                        <Border Style="{StaticResource TagBorderStyle}" Margin="0,0,6,6">
+                            <Label Text="{Binding Detail.ProcurementType}"
+                                   Style="{StaticResource TagLabelStyle}"
+                                   LineBreakMode="WordWrap" />
+                        </Border>
+                        <Border Style="{StaticResource TagBorderStyle}"
+                                Margin="0,0,6,6"
+                                BackgroundColor="{StaticResource BrandCream}">
+                            <Label Text="{Binding Detail.StatusText}"
+                                   Style="{StaticResource TagLabelStyle}"
+                                   TextColor="{StaticResource BrandPrimary}" />
+                        </Border>
+                    </FlexLayout>
+
+                    <Label Text="{Binding Detail.Description}"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="20"
+                           SemanticProperties.HeadingLevel="Level1"
+                           TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+
+                    <Label Text="{Binding Detail.Code}"
+                           Style="{StaticResource SecondaryTextStyle}" />
+                </VerticalStackLayout>
+
+                <!-- Monto destacado -->
+                <Border Padding="20"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 18"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandSurfaceDark}}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{Binding Detail.AmountLabel}" FontSize="13" TextColor="{StaticResource BrandTertiary}" />
+                        <Label Text="{Binding Detail.AmountText}"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="26"
+                               TextColor="{StaticResource BrandCream}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Ficha del proceso -->
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="16" RowSpacing="16">
+                        <VerticalStackLayout Grid.ColumnSpan="2" Spacing="2">
+                            <Label Text="Entidad contratante" Style="{StaticResource FieldLabelStyle}" />
+                            <Label Text="{Binding Detail.BuyerName}" Style="{StaticResource FieldValueStyle}" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="1" Spacing="2">
+                            <Label Text="Ubicación" Style="{StaticResource FieldLabelStyle}" />
+                            <Label Text="{Binding Detail.LocationText}" Style="{StaticResource FieldValueStyle}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2">
+                            <Label Text="Categoría" Style="{StaticResource FieldLabelStyle}" />
+                            <Label Text="{Binding Detail.CategoryText}" Style="{StaticResource FieldValueStyle}" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Row="2" Spacing="2">
+                            <Label Text="Última actualización" Style="{StaticResource FieldLabelStyle}" />
+                            <Label Text="{Binding Detail.UpdatedText}" Style="{StaticResource FieldValueStyle}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="2" Grid.Column="1" Spacing="2">
+                            <Label Text="Oferentes" Style="{StaticResource FieldLabelStyle}" />
+                            <Label Text="{Binding Detail.TenderersText}" Style="{StaticResource FieldValueStyle}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Plazo para ofertar -->
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Image Source="ic_calendar_small.png" WidthRequest="22" HeightRequest="22" VerticalOptions="Center" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Periodo para presentar ofertas" Style="{StaticResource FieldLabelStyle}" />
+                            <Label Text="{Binding Detail.TenderPeriodText}" Style="{StaticResource FieldValueStyle}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Proveedor adjudicado -->
+                <VerticalStackLayout Spacing="8" IsVisible="{Binding Detail.HasAwardedSuppliers}">
+                    <Label Text="Adjudicado a" Style="{StaticResource SectionTitleStyle}" FontSize="16" />
+                    <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Detail.AwardedSuppliers}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border Style="{StaticResource CardBorderStyle}" Padding="14">
+                                    <Label Text="{Binding .}" Style="{StaticResource FieldValueStyle}" FontSize="14" />
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- Ítems -->
+                <VerticalStackLayout Spacing="8" IsVisible="{Binding Detail.HasItems}">
+                    <Label Text="Qué se contrata" Style="{StaticResource SectionTitleStyle}" FontSize="16" />
+                    <Border Style="{StaticResource CardBorderStyle}" Padding="16,4">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Detail.Items}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:ProcessItem">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Padding="0,12">
+                                        <Label Text="{Binding Description}"
+                                               FontSize="14"
+                                               TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding QuantityText}"
+                                               Style="{StaticResource SecondaryTextStyle}"
+                                               VerticalOptions="Start" />
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Atribución requerida por la licencia de los datos -->
+                <Label Text="{Binding Detail.Ocid, StringFormat='OCID: {0} · Datos abiertos de SERCOP (CC BY 3.0 EC)'}"
+                       FontSize="11"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{StaticResource BrandTertiary}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

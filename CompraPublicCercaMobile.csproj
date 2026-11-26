@@ -28,7 +28,7 @@
         <MauiXamlInflator>SourceGen</MauiXamlInflator>
 
         <!-- Display name -->
-        <ApplicationTitle>CompraPublicCercaMobile</ApplicationTitle>
+        <ApplicationTitle>Compra Cerca EC</ApplicationTitle>
 
         <!-- App Identifier -->
         <ApplicationId>com.uisrael.comprapublica</ApplicationId>
@@ -47,12 +47,20 @@
         <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     </PropertyGroup>
 
+    <!-- Permite compilar iOS/MacCatalyst con una versión de Xcode más nueva que la soportada por el workload de .NET (p. ej. Xcode 27 con .NET for iOS 26.5). -->
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' Or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+        <ValidateXcodeVersion>false</ValidateXcodeVersion>
+    </PropertyGroup>
+
     <ItemGroup>
         <!-- App Icon -->
-        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+        <!-- El isotipo viene dentro de la zona segura de Android (adaptive icon). iOS no recorta en círculo:
+             ahí se agranda para que tenga el mismo peso visual que los demás íconos. -->
+        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'ios'" Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#202D42" />
+        <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'" Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="1.35" Color="#202D42" />
 
         <!-- Splash Screen -->
-        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#202D42" BaseSize="208,208" />
 
         <!-- Images -->
         <MauiImage Include="Resources\Images\*" />

@@ -7,7 +7,7 @@ Esta guía explica cómo trabajamos en **CompraPublicCercaMobile**. Léela antes
 ---
 
 ## Índice
-
+      
 1. [Requisitos del entorno](#1-requisitos-del-entorno)
 2. [Primeros pasos](#2-primeros-pasos)
 3. [Flujo de trabajo (Git)](#3-flujo-de-trabajo-git)

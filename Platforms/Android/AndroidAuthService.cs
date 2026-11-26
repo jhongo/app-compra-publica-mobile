@@ -4,7 +4,6 @@ using Android.Gms.Auth.Api.SignIn;
 using Android.Gms.Common;
 using Android.Gms.Common.Apis;
 using Android.Gms.Extensions;
-using CompraPublicCercaMobile.Models;
 using CompraPublicCercaMobile.Services.Interfaces;
 using Firebase.Auth;
 
@@ -16,7 +15,7 @@ public sealed class AndroidAuthService : IAuthService
 
     private static TaskCompletionSource<Intent?>? _pendingSignIn;
 
-    public async Task<AuthUser?> SignInWithGoogleAsync()
+    public async Task<GoogleCredential?> SignInWithGoogleAsync()
     {
         var activity = Platform.CurrentActivity
             ?? throw new InvalidOperationException("No hay una actividad activa.");
@@ -49,7 +48,11 @@ public sealed class AndroidAuthService : IAuthService
         var user = authResult.User
             ?? throw new InvalidOperationException("Firebase no devolvió un usuario.");
 
-        return new AuthUser(user.Uid, user.DisplayName, user.Email);
+        // ID token de Firebase (no el de Google): es el que valida la API.
+        var tokenResult = await user.GetIdToken(false).AsAsync<GetTokenResult>();
+        var firebaseToken = tokenResult.Token
+            ?? throw new InvalidOperationException("Firebase no devolvió un token.");
+        return new GoogleCredential(firebaseToken, user.DisplayName, user.Email);
     }
 
     public Task SignOutAsync()
@@ -74,7 +77,7 @@ public sealed class AndroidAuthService : IAuthService
         var resourceId = activity.Resources!.GetIdentifier("default_web_client_id", "string", activity.PackageName);
         if (resourceId == 0)
         {
-            throw new InvalidOperationException("Falta Platforms/Android/google-services.json. Revisa docs/firebase-auth.md.");
+            throw new GoogleSignInNotConfiguredException("Platforms/Android/google-services.json");
         }
 
         return activity.GetString(resourceId);

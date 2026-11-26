@@ -7,86 +7,102 @@
              x:DataType="viewModels:LoginViewModel"
              Title="{Binding Title}"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{AppThemeBinding Light={StaticResource BrandCream}, Dark={StaticResource BrandInk}}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BrandBackground}, Dark={StaticResource BrandInk}}">
 
     <ScrollView>
-        <VerticalStackLayout Padding="24,48,24,32"
+        <VerticalStackLayout Padding="24,40,24,32"
                              Spacing="0"
                              VerticalOptions="Center">
 
             <!-- ===== Marca ===== -->
             <Image Source="{AppThemeBinding Light=brand_isotipo_azul.png, Dark=brand_isotipo_crema.png}"
-                   WidthRequest="88"
-                   HeightRequest="88"
+                   WidthRequest="64"
+                   HeightRequest="64"
                    HorizontalOptions="Center"
                    SemanticProperties.Description="Logotipo de Compra Pública" />
 
             <Label Text="COMPRA PÚBLICA CERCA"
-                   Margin="0,16,0,0"
+                   Margin="0,12,0,0"
                    FontFamily="OpenSansSemibold"
-                   FontSize="16"
-                   CharacterSpacing="1.6"
+                   FontSize="13"
+                   CharacterSpacing="1.4"
                    HorizontalTextAlignment="Center"
-                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+                   TextColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
 
-            <Label Text="CONCURSOS PÚBLICOS DEL SERCOP"
-                   Margin="0,4,0,0"
-                   FontSize="11"
-                   CharacterSpacing="1.8"
-                   HorizontalTextAlignment="Center"
-                   TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
-
-            <!-- ===== Encabezado del formulario ===== -->
-            <Label Text="Inicia sesión"
+            <!-- ===== Encabezado ===== -->
+            <Label Text="¡Bienvenido!"
                    Margin="0,40,0,0"
                    FontFamily="OpenSansSemibold"
-                   FontSize="26"
+                   FontSize="28"
                    SemanticProperties.HeadingLevel="Level1"
                    TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
 
-            <Label Text="Encuentra concursos públicos cerca de ti."
-                   Margin="0,4,0,0"
+            <Label Text="Inicia sesión para encontrar concursos públicos cerca de ti."
+                   Margin="0,6,0,0"
                    FontSize="15"
+                   LineHeight="1.2"
                    TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
 
-            <!-- ===== Usuario ===== -->
-            <Label Text="Usuario"
-                   Margin="0,28,0,8"
-                   Style="{StaticResource LoginFieldLabelStyle}" />
-            <Border Style="{StaticResource LoginFieldBorderStyle}">
-                <controls:BorderlessEntry Placeholder="Correo o nombre de usuario"
-                       Text="{Binding Username}"
-                       Keyboard="Email"
-                       IsSpellCheckEnabled="False"
-                       IsTextPredictionEnabled="False"
-                       ReturnType="Next"
-                       Style="{StaticResource LoginEntryStyle}"
-                       SemanticProperties.Description="Usuario" />
+            <!-- ===== Correo ===== -->
+            <Border Margin="0,32,0,0"
+                    Style="{StaticResource AuthFieldBorderStyle}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border"
+                                 x:DataType="controls:BorderlessEntry"
+                                 Binding="{Binding Source={x:Reference UsernameEntry}, Path=IsFocused}"
+                                 Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Image Source="ic_field_mail.png"
+                           Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry x:Name="UsernameEntry"
+                                              Grid.Column="1"
+                                              Placeholder="Correo electrónico"
+                                              Text="{Binding Email}"
+                                              Keyboard="Email"
+                                              IsSpellCheckEnabled="False"
+                                              IsTextPredictionEnabled="False"
+                                              ReturnType="Next"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Correo electrónico" />
+                </Grid>
             </Border>
+            <Label Text="{Binding EmailError}" Style="{StaticResource FieldErrorStyle}" />
 
             <!-- ===== Contraseña ===== -->
-            <Label Text="Contraseña"
-                   Margin="0,20,0,8"
-                   Style="{StaticResource LoginFieldLabelStyle}" />
-            <Border Style="{StaticResource LoginFieldBorderStyle}">
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
-                    <controls:BorderlessEntry Grid.Column="0"
-                           Placeholder="Ingresa tu contraseña"
-                           Text="{Binding Password}"
-                           IsPassword="{Binding IsPasswordHidden}"
-                           IsSpellCheckEnabled="False"
-                           IsTextPredictionEnabled="False"
-                           ReturnType="Go"
-                           ReturnCommand="{Binding LoginCommand}"
-                           Style="{StaticResource LoginEntryStyle}"
-                           SemanticProperties.Description="Contraseña" />
+            <Border Margin="0,14,0,0"
+                    Style="{StaticResource AuthFieldBorderStyle}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border"
+                                 x:DataType="controls:BorderlessEntry"
+                                 Binding="{Binding Source={x:Reference PasswordEntry}, Path=IsFocused}"
+                                 Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Image Source="ic_field_lock.png"
+                           Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry x:Name="PasswordEntry"
+                                              Grid.Column="1"
+                                              Placeholder="Contraseña"
+                                              Text="{Binding Password}"
+                                              IsPassword="{Binding IsPasswordHidden}"
+                                              IsSpellCheckEnabled="False"
+                                              IsTextPredictionEnabled="False"
+                                              ReturnType="Go"
+                                              ReturnCommand="{Binding LoginCommand}"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Contraseña" />
 
                     <!-- Mostrar / ocultar contraseña: área táctil de 44x44 -->
-                    <ImageButton Grid.Column="1"
+                    <ImageButton Grid.Column="2"
                                  Source="ic_eye.png"
                                  WidthRequest="44"
                                  HeightRequest="44"
-                                 Padding="10"
+                                 Padding="11"
                                  BackgroundColor="Transparent"
                                  VerticalOptions="Center"
                                  Command="{Binding TogglePasswordVisibilityCommand}"
@@ -102,28 +118,46 @@
                     </ImageButton>
                 </Grid>
             </Border>
+            <Label Text="{Binding PasswordError}" Style="{StaticResource FieldErrorStyle}" />
 
-            <!-- TODO: conectar cuando exista la recuperación de contraseña. -->
+            <!-- Padding: área táctil cómoda sin agrandar el texto -->
             <Label Text="¿Olvidaste tu contraseña?"
-                   Margin="0,4,0,0"
+                   Margin="0,0,0,0"
+                   Padding="8,8,0,8"
                    HorizontalOptions="End"
-                   Style="{StaticResource LoginLinkStyle}" />
+                   FontSize="13"
+                   Style="{StaticResource AuthLinkStyle}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToForgotPasswordCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
 
             <!-- ===== Acciones ===== -->
-            <!-- TEMPORAL: entra a Inicio sin validar datos (ver LoginViewModel.LoginAsync). -->
             <Button Text="Ingresar"
-                    Margin="0,12,0,0"
-                    Style="{StaticResource LoginPrimaryButtonStyle}"
+                    Margin="0,16,0,0"
+                    Style="{StaticResource AuthPrimaryButtonStyle}"
                     Command="{Binding LoginCommand}" />
+
+            <!-- Inicio rápido: solo si se activó en Perfil y hay una sesión guardada -->
+            <VerticalStackLayout Margin="0,12,0,0" Spacing="4" IsVisible="{Binding CanUseBiometrics}">
+                <Button Text="{Binding BiometricButtonText}"
+                        HeightRequest="54"
+                        Style="{StaticResource TonalButtonStyle}"
+                        Command="{Binding LoginWithBiometricsCommand}" />
+                <Label Text="{Binding BiometricAccountText}"
+                       FontSize="12"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+            </VerticalStackLayout>
 
             <!-- Separador -->
             <Grid ColumnDefinitions="*,Auto,*"
                   ColumnSpacing="12"
-                  Margin="0,24">
+                  Margin="24,32,24,20">
                 <BoxView Grid.Column="0"
                          HeightRequest="1"
                          VerticalOptions="Center"
-                         Color="{StaticResource BrandTertiary}" />
+                         Color="{AppThemeBinding Light={StaticResource BrandFieldBorder}, Dark={StaticResource BrandPrimary}}" />
                 <Label Grid.Column="1"
                        Text="o continúa con"
                        FontSize="13"
@@ -131,40 +165,17 @@
                 <BoxView Grid.Column="2"
                          HeightRequest="1"
                          VerticalOptions="Center"
-                         Color="{StaticResource BrandTertiary}" />
+                         Color="{AppThemeBinding Light={StaticResource BrandFieldBorder}, Dark={StaticResource BrandPrimary}}" />
             </Grid>
 
-            <!-- Google: el logo va encima del botón y no intercepta los toques -->
-            <Grid>
-                <Button Text="Continuar con Google"
-                        Style="{StaticResource LoginGoogleButtonStyle}"
-                        Command="{Binding SignInWithGoogleCommand}" />
-                <Image Source="google_icon.png"
-                       WidthRequest="20"
-                       HeightRequest="20"
-                       Margin="20,0,0,0"
-                       HorizontalOptions="Start"
-                       VerticalOptions="Center"
-                       InputTransparent="True" />
-            </Grid>
+            <!-- Inicio de sesión social -->
+            <ImageButton Source="google_icon.png"
+                         HorizontalOptions="Center"
+                         Style="{StaticResource AuthSocialButtonStyle}"
+                         Command="{Binding SignInWithGoogleCommand}"
+                         SemanticProperties.Description="Continuar con Google" />
 
-            <!-- Registro -->
-            <HorizontalStackLayout Margin="0,20,0,0"
-                                   HorizontalOptions="Center"
-                                   Spacing="4">
-                <Label Text="¿No tienes una cuenta?"
-                       FontSize="14"
-                       VerticalTextAlignment="Center"
-                       TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
-                <Label Text="Regístrate"
-                       Style="{StaticResource LoginLinkStyle}">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding GoToRegisterCommand}" />
-                    </Label.GestureRecognizers>
-                </Label>
-            </HorizontalStackLayout>
-
-            <!-- ===== Estado ===== -->
+            <!-- Estado justo bajo el último botón tocado, para que el error se vea sin desplazarse -->
             <ActivityIndicator Margin="0,12,0,0"
                                IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
@@ -183,6 +194,23 @@
                    FontSize="13"
                    HorizontalTextAlignment="Center"
                    TextColor="{AppThemeBinding Light=#B3261E, Dark=#F2B8B5}" />
+
+
+            <!-- Registro -->
+            <HorizontalStackLayout Margin="0,28,0,0"
+                                   HorizontalOptions="Center"
+                                   Spacing="4">
+                <Label Text="¿No tienes una cuenta?"
+                       FontSize="14"
+                       VerticalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+                <Label Text="Regístrate"
+                       Style="{StaticResource AuthLinkStyle}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToRegisterCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

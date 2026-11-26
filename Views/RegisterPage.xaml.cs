@@ -1,14 +1,12 @@
-
 using CompraPublicCercaMobile.ViewModels;
 
-namespace CompraPublicCercaMobile.Views
+namespace CompraPublicCercaMobile.Views;
+
+public partial class RegisterPage : ContentPage
 {
-    public partial class RegisterPage : ContentPage
+    public RegisterPage(RegisterViewModel viewModel)
     {
-        public RegisterPage(RegisterViewModel viewModel)
-        {
-            InitializeComponent();
-            BindingContext = viewModel;
-        }
+        InitializeComponent();
+        BindingContext = viewModel;
     }
 }

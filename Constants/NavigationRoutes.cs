@@ -8,12 +8,19 @@ public static class NavigationRoutes
 {
     public const string Login = "login";
 
-    // Ruta de detalle (se apila sobre el login).
+    // Rutas de detalle (se apilan sobre la pantalla actual).
     public const string Registro = "registro";
+    public const string RecuperarContrasena = "recuperar-contrasena";
+    public const string ProcessDetail = "detalle";
+    public const string LocationPicker = "ubicacion";
 
     // Pestañas de la barra de navegación inferior.
     public const string Inicio = "inicio";
     public const string Buscar = "buscar";
     public const string Favoritos = "favoritos";
     public const string Perfil = "perfil";
+
+    // Parámetros de navegación.
+    public const string OcidParameter = "ocid";
+    public const string EmailParameter = "email";
 }

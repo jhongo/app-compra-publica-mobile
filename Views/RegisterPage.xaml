@@ -1,210 +1,396 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:CompraPublicCercaMobile.Controls"
+             xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
+             x:Class="CompraPublicCercaMobile.Views.RegisterPage"
+             x:DataType="viewModels:RegisterViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BrandBackground}, Dark={StaticResource BrandInk}}">
 
-<ContentPage
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
-    x:Class="CompraPublicCercaMobile.Views.RegisterPage"
-    x:DataType="viewModels:RegisterViewModel"
-    Title="Registro"
-    SafeAreaEdges="All">
-
+    <!-- Mismos estilos que Login (Auth*Style en Styles.xaml). Formulario en una sola
+         columna: es más fácil de recorrer y de completar en pantallas pequeñas. -->
     <ScrollView>
-        <VerticalStackLayout
-            Padding="24,55,24,30"
-            Spacing="18">
+        <VerticalStackLayout Padding="24,8,24,32" Spacing="0">
 
-            <!-- Título -->
-            <Label
-                Text="Registro"
-                Style="{StaticResource Headline}"
-                Margin="0,15,0,25" />
+            <!-- ===== Volver ===== -->
+            <ImageButton Source="{AppThemeBinding Light=ic_back_dark.png, Dark=ic_back_light.png}"
+                         WidthRequest="44"
+                         HeightRequest="44"
+                         Padding="10"
+                         Margin="-10,0,0,0"
+                         HorizontalOptions="Start"
+                         BackgroundColor="Transparent"
+                         Command="{Binding GoBackCommand}"
+                         SemanticProperties.Description="Volver" />
 
-            <!-- Nombres y Apellidos -->
-            <Grid
-                ColumnDefinitions="*,*"
-                ColumnSpacing="15">
+            <!-- ===== Encabezado ===== -->
+            <Label Text="Crea tu cuenta"
+                   Margin="0,16,0,0"
+                   FontFamily="OpenSansSemibold"
+                   FontSize="28"
+                   SemanticProperties.HeadingLevel="Level1"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
 
-                <VerticalStackLayout
-                    Grid.Column="0"
-                    Spacing="5">
+            <Label Text="Regístrate para recibir concursos públicos cerca de ti."
+                   Margin="0,6,0,0"
+                   FontSize="15"
+                   LineHeight="1.2"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
 
-                    <Label
-                        Text="Nombres"
-                        FontAttributes="Bold" />
-
-                    <Entry
-                        Placeholder="Ingresa tus nombres"
-                        Text="{Binding FirstNames}" />
-
-                </VerticalStackLayout>
-
-                <VerticalStackLayout
-                    Grid.Column="1"
-                    Spacing="5">
-
-                    <Label
-                        Text="Apellidos"
-                        FontAttributes="Bold" />
-
-                    <Entry
-                        Placeholder="Ingresa tus apellidos"
-                        Text="{Binding LastNames}" />
-
-                </VerticalStackLayout>
-            </Grid>
-
-            <!-- Correo electrónico -->
-            <VerticalStackLayout Spacing="5">
-
-                <Label
-                    Text="Correo"
-                    FontAttributes="Bold" />
-
-                <Grid
-                    ColumnDefinitions="*,Auto"
-                    ColumnSpacing="8">
-
-                    <Entry
-                        Grid.Column="0"
-                        Placeholder="Ingresa tu correo"
-                        Keyboard="Email"
-                        Text="{Binding Email}" />
-
-                    <Button
-                        Grid.Column="1"
-                        Text="Validar"
-                        Style="{StaticResource ValidateButtonStyle}" />
-
+            <!-- ===== Nombres ===== -->
+            <Border Margin="0,28,0,0" Style="{StaticResource AuthFieldBorderStyle}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" x:DataType="controls:BorderlessEntry"
+                                 Binding="{Binding Source={x:Reference FirstNamesEntry}, Path=IsFocused}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Image Source="ic_field_person.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry x:Name="FirstNamesEntry"
+                                              Grid.Column="1"
+                                              Placeholder="Nombres"
+                                              Text="{Binding FirstNames}"
+                                              Keyboard="Text"
+                                              ReturnType="Next"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Nombres" />
                 </Grid>
-            </VerticalStackLayout>
+            </Border>
+            <Label Text="{Binding FirstNamesError}" Style="{StaticResource FieldErrorStyle}" />
 
-            <!-- Código de validación -->
-            <VerticalStackLayout Spacing="5">
+            <!-- ===== Apellidos ===== -->
+            <Border Margin="0,14,0,0" Style="{StaticResource AuthFieldBorderStyle}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" x:DataType="controls:BorderlessEntry"
+                                 Binding="{Binding Source={x:Reference LastNamesEntry}, Path=IsFocused}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Image Source="ic_field_person.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry x:Name="LastNamesEntry"
+                                              Grid.Column="1"
+                                              Placeholder="Apellidos"
+                                              Text="{Binding LastNames}"
+                                              Keyboard="Text"
+                                              ReturnType="Next"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Apellidos" />
+                </Grid>
+            </Border>
+            <Label Text="{Binding LastNamesError}" Style="{StaticResource FieldErrorStyle}" />
 
-                <Label
-                    Text="Código de Validación"
-                    FontAttributes="Bold" />
+            <!-- ===== Correo + Validar ===== -->
+            <Border Margin="0,14,0,0" Style="{StaticResource AuthFieldBorderStyle}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" x:DataType="controls:BorderlessEntry"
+                                 Binding="{Binding Source={x:Reference EmailEntry}, Path=IsFocused}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Image Source="ic_field_mail.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry x:Name="EmailEntry"
+                                              Grid.Column="1"
+                                              Placeholder="Correo electrónico"
+                                              Text="{Binding Email}"
+                                              Keyboard="Email"
+                                              IsSpellCheckEnabled="False"
+                                              IsTextPredictionEnabled="False"
+                                              ReturnType="Next"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Correo electrónico" />
+                    <!-- Envía el código; muestra la cuenta regresiva para reenviar y "Validado" al terminar -->
+                    <Button Grid.Column="2"
+                            Text="{Binding ValidateButtonText}"
+                            IsEnabled="{Binding CanRequestCode}"
+                            Command="{Binding SendCodeCommand}"
+                            Padding="12,0"
+                            HeightRequest="44"
+                            VerticalOptions="Center"
+                            BackgroundColor="Transparent"
+                            FontFamily="OpenSansSemibold"
+                            FontSize="14"
+                            TextColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}"
+                            SemanticProperties.Description="Enviar código de validación al correo">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsEmailVerified}" Value="True">
+                                <Setter Property="TextColor" Value="{AppThemeBinding Light=#2E7D32, Dark=#81C784}" />
+                            </DataTrigger>
+                            <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.75" />
+                            </Trigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+            </Border>
+            <Label Text="{Binding EmailError}" Style="{StaticResource FieldErrorStyle}" />
 
-                <Entry
-                    Placeholder="Ingresa el código de validación"
-                    Keyboard="Numeric"
-                    Text="{Binding VerificationCode}" />
+            <!-- ===== Código de validación (aparece al tocar «Validar») ===== -->
+            <Border Margin="0,14,0,0" Style="{StaticResource AuthFieldBorderStyle}" IsVisible="{Binding IsCodeFieldVisible}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" x:DataType="controls:BorderlessEntry"
+                                 Binding="{Binding Source={x:Reference CodeEntry}, Path=IsFocused}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Image Source="ic_field_shield.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry x:Name="CodeEntry"
+                                              Grid.Column="1"
+                                              Placeholder="Código de 6 dígitos"
+                                              Text="{Binding VerificationCode}"
+                                              Keyboard="Numeric"
+                                              MaxLength="6"
+                                              ReturnType="Next"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Código de validación de 6 dígitos" />
+                    <ActivityIndicator Grid.Column="2"
+                                       WidthRequest="20"
+                                       HeightRequest="20"
+                                       Margin="0,0,12,0"
+                                       IsRunning="{Binding IsVerifyingCode}"
+                                       IsVisible="{Binding IsVerifyingCode}"
+                                       Color="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
+                </Grid>
+            </Border>
+            <Label Text="{Binding CodeHint}" Style="{StaticResource FieldHintStyle}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding IsEmailVerified}" Value="True">
+                        <Setter Property="TextColor" Value="{AppThemeBinding Light=#2E7D32, Dark=#81C784}" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+            <Label Text="{Binding CodeError}" Style="{StaticResource FieldErrorStyle}" />
 
-            </VerticalStackLayout>
+            <!-- ===== Contraseña ===== -->
+            <Border Margin="0,14,0,0" Style="{StaticResource AuthFieldBorderStyle}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" x:DataType="controls:BorderlessEntry"
+                                 Binding="{Binding Source={x:Reference PasswordEntry}, Path=IsFocused}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Image Source="ic_field_lock.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry x:Name="PasswordEntry"
+                                              Grid.Column="1"
+                                              Placeholder="Contraseña"
+                                              Text="{Binding Password}"
+                                              IsPassword="{Binding IsPasswordHidden}"
+                                              IsSpellCheckEnabled="False"
+                                              IsTextPredictionEnabled="False"
+                                              ReturnType="Next"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Contraseña" />
+                    <ImageButton Grid.Column="2"
+                                 Source="ic_eye.png"
+                                 WidthRequest="44"
+                                 HeightRequest="44"
+                                 Padding="11"
+                                 BackgroundColor="Transparent"
+                                 VerticalOptions="Center"
+                                 Command="{Binding TogglePasswordVisibilityCommand}"
+                                 SemanticProperties.Description="Mostrar contraseña">
+                        <ImageButton.Triggers>
+                            <DataTrigger TargetType="ImageButton" Binding="{Binding IsPasswordHidden}" Value="False">
+                                <Setter Property="Source" Value="ic_eye_off.png" />
+                                <Setter Property="SemanticProperties.Description" Value="Ocultar contraseña" />
+                            </DataTrigger>
+                        </ImageButton.Triggers>
+                    </ImageButton>
+                </Grid>
+            </Border>
+            <Label Text="{Binding PasswordHint}" Style="{StaticResource FieldHintStyle}" />
+            <Label Text="{Binding PasswordError}" Style="{StaticResource FieldErrorStyle}" />
 
-            <!-- Dirección -->
-            <VerticalStackLayout Spacing="5">
+            <!-- ===== Confirmar contraseña ===== -->
+            <Border Margin="0,14,0,0" Style="{StaticResource AuthFieldBorderStyle}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" x:DataType="controls:BorderlessEntry"
+                                 Binding="{Binding Source={x:Reference PasswordConfirmationEntry}, Path=IsFocused}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Image Source="ic_field_lock.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry x:Name="PasswordConfirmationEntry"
+                                              Grid.Column="1"
+                                              Placeholder="Confirmar contraseña"
+                                              Text="{Binding PasswordConfirmation}"
+                                              IsPassword="{Binding IsPasswordHidden}"
+                                              IsSpellCheckEnabled="False"
+                                              IsTextPredictionEnabled="False"
+                                              ReturnType="Next"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Confirmar contraseña" />
+                </Grid>
+            </Border>
+            <Label Text="{Binding PasswordConfirmationError}" Style="{StaticResource FieldErrorStyle}" />
 
-                <Label
-                    Text="Dirección"
-                    FontAttributes="Bold" />
+            <!-- ===== Dirección ===== -->
+            <Border Margin="0,14,0,0" Style="{StaticResource AuthFieldBorderStyle}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" x:DataType="controls:BorderlessEntry"
+                                 Binding="{Binding Source={x:Reference AddressEntry}, Path=IsFocused}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Image Source="ic_field_place.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry x:Name="AddressEntry"
+                                              Grid.Column="1"
+                                              Placeholder="Dirección (opcional)"
+                                              Text="{Binding Address}"
+                                              ReturnType="Next"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Dirección" />
+                </Grid>
+            </Border>
 
-                <Entry
-                    Placeholder="Ingresa tu dirección"
-                    Text="{Binding Address}" />
+            <!-- ===== Provincia ===== -->
+            <Border Margin="0,14,0,0" Padding="16,0,12,0" Style="{StaticResource AuthFieldBorderStyle}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" x:DataType="controls:BorderlessPicker"
+                                 Binding="{Binding Source={x:Reference ProvincePicker}, Path=IsFocused}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Image Source="ic_field_place.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessPicker x:Name="ProvincePicker"
+                                               Grid.Column="1"
+                                               Title="Provincia"
+                                               ItemsSource="{Binding Provinces}"
+                                               SelectedItem="{Binding Province}"
+                                               FontSize="15"
+                                               VerticalOptions="Center"
+                                               MinimumHeightRequest="54"
+                                               BackgroundColor="Transparent"
+                                               TitleColor="{StaticResource BrandTertiary}"
+                                               TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}"
+                                               SemanticProperties.Description="Provincia"
+                                               SemanticProperties.Hint="Mostraremos primero los procesos de esta provincia" />
+                    <Image Grid.Column="2"
+                           Source="ic_chevron_down.png"
+                           WidthRequest="20"
+                           HeightRequest="20"
+                           VerticalOptions="Center"
+                           InputTransparent="True" />
+                </Grid>
+            </Border>
+            <Label Text="{Binding ProvinceError}" Style="{StaticResource FieldErrorStyle}" />
 
-            </VerticalStackLayout>
+            <!-- ===== Código postal ===== -->
+            <Border Margin="0,14,0,0" Style="{StaticResource AuthFieldBorderStyle}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" x:DataType="controls:BorderlessEntry"
+                                 Binding="{Binding Source={x:Reference PostalCodeEntry}, Path=IsFocused}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Image Source="ic_field_mailbox.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry x:Name="PostalCodeEntry"
+                                              Grid.Column="1"
+                                              Placeholder="Código postal (opcional)"
+                                              Text="{Binding PostalCode}"
+                                              Keyboard="Numeric"
+                                              MaxLength="6"
+                                              ReturnType="Done"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Código postal, opcional" />
+                </Grid>
+            </Border>
+            <Label Text="{Binding PostalCodeError}" Style="{StaticResource FieldErrorStyle}" />
 
-            <!-- Código postal y fecha de nacimiento -->
-            <Grid
-                ColumnDefinitions="*,*"
-                ColumnSpacing="15">
+            <!-- ===== Fecha de nacimiento ===== -->
+            <Border Margin="0,14,0,0" Padding="16,0,12,0" Style="{StaticResource AuthFieldBorderStyle}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Image Source="ic_field_calendar.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <Label Grid.Column="1"
+                           Text="Nacimiento (opcional)"
+                           FontSize="15"
+                           VerticalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+                    <controls:BorderlessDatePicker Grid.Column="2"
+                                                   Date="{Binding BirthDate}"
+                                                   MaximumDate="{Binding MaximumBirthDate}"
+                                                   Format="dd/MM/yyyy"
+                                                   FontSize="15"
+                                                   VerticalOptions="Center"
+                                                   BackgroundColor="Transparent"
+                                                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}"
+                                                   SemanticProperties.Description="Fecha de nacimiento, opcional" />
+                </Grid>
+            </Border>
+            <Label Text="{Binding BirthDateError}" Style="{StaticResource FieldErrorStyle}" />
 
-                <VerticalStackLayout
-                    Grid.Column="0"
-                    Spacing="5">
+            <!-- ===== Acciones ===== -->
+            <Button Text="Registrarse"
+                    Margin="0,28,0,0"
+                    Style="{StaticResource AuthPrimaryButtonStyle}"
+                    Command="{Binding RegisterCommand}" />
 
-                    <Label
-                        Text="Código Postal"
-                        FontAttributes="Bold" />
-
-                    <Entry
-                        Placeholder="Código postal"
-                        Keyboard="Numeric"
-                        Text="{Binding PostalCode}" />
-
-                </VerticalStackLayout>
-
-                <VerticalStackLayout
-                    Grid.Column="1"
-                    Spacing="5">
-
-                    <Label
-                        Text="Fecha de Nacimiento"
-                        FontAttributes="Bold" />
-
-                    <DatePicker
-                        Date="{Binding BirthDate}"
-                        Format="dd/MM/yyyy"
-                        MaximumDate="2026-11-14" />
-
-                </VerticalStackLayout>
-            </Grid>
-
-            <!-- Botón principal Registrarse -->
-            <Button
-                Text="Registrarse"
-                Style="{StaticResource RegisterButtonStyle}"
-                HorizontalOptions="Fill"
-                FontAttributes="Bold"
-                Margin="0,15,0,0" />
+            <ActivityIndicator Margin="0,12,0,0"
+                               IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center"
+                               Color="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
+            <Label Text="{Binding ErrorMessage}"
+                   Margin="0,8,0,0"
+                   HorizontalTextAlignment="Center"
+                   Style="{StaticResource FieldErrorStyle}"
+                   FontSize="13" />
 
             <!-- Separador -->
-            <Grid
-                ColumnDefinitions="*,Auto,*"
-                ColumnSpacing="12"
-                Margin="0,5">
-
-                <BoxView
-                    Grid.Column="0"
-                    HeightRequest="1"
-                    VerticalOptions="Center" />
-
-                <Label
-                    Grid.Column="1"
-                    Text="o"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center" />
-
-                <BoxView
-                    Grid.Column="2"
-                    HeightRequest="1"
-                    VerticalOptions="Center" />
-
+            <Grid ColumnDefinitions="*,Auto,*"
+                  ColumnSpacing="12"
+                  Margin="24,32,24,20">
+                <BoxView Grid.Column="0"
+                         HeightRequest="1"
+                         VerticalOptions="Center"
+                         Color="{AppThemeBinding Light={StaticResource BrandFieldBorder}, Dark={StaticResource BrandPrimary}}" />
+                <Label Grid.Column="1"
+                       Text="o regístrate con"
+                       FontSize="13"
+                       TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+                <BoxView Grid.Column="2"
+                         HeightRequest="1"
+                         VerticalOptions="Center"
+                         Color="{AppThemeBinding Light={StaticResource BrandFieldBorder}, Dark={StaticResource BrandPrimary}}" />
             </Grid>
 
-            <!-- Botón visual de Google -->
-            <Border
-                Style="{StaticResource GoogleRegisterBorderStyle}"
-                HeightRequest="48"
-                HorizontalOptions="Fill">
+            <ImageButton Source="google_icon.png"
+                         HorizontalOptions="Center"
+                         Style="{StaticResource AuthSocialButtonStyle}"
+                         Command="{Binding RegisterWithGoogleCommand}"
+                         SemanticProperties.Description="Registrarse con Google" />
+            <Label Text="{Binding GoogleErrorMessage}"
+                   Margin="0,10,0,0"
+                   HorizontalTextAlignment="Center"
+                   Style="{StaticResource FieldErrorStyle}"
+                   FontSize="13" />
 
-                <Grid
-                    ColumnDefinitions="Auto,*"
-                    ColumnSpacing="10"
-                    Padding="16,5">
-
-                    <Image
-                        Grid.Column="0"
-                        Source="google_icon.png"
-                        WidthRequest="28"
-                        HeightRequest="28"
-                        VerticalOptions="Center" />
-
-                    <Label
-                        Grid.Column="1"
-                        Text="Registrarse con Google"
-                        TextColor="{StaticResource White}"
-                        FontAttributes="Bold"
-                        VerticalOptions="Center"
-                        HorizontalTextAlignment="Center" />
-
-                </Grid>
-
-            </Border>
+            <!-- Volver al login -->
+            <HorizontalStackLayout Margin="0,28,0,0"
+                                   HorizontalOptions="Center"
+                                   Spacing="4">
+                <Label Text="¿Ya tienes una cuenta?"
+                       FontSize="14"
+                       VerticalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+                <Label Text="Inicia sesión"
+                       Style="{StaticResource AuthLinkStyle}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

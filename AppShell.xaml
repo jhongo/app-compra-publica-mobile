@@ -16,10 +16,10 @@
 
     <!-- Barra de navegación inferior, visible después de iniciar sesión. -->
     <TabBar
-        Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"
-        Shell.TabBarForegroundColor="{StaticResource PrimaryColor}"
-        Shell.TabBarTitleColor="{StaticResource PrimaryColor}"
-        Shell.TabBarUnselectedColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}">
+        Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource BrandInk}}"
+        Shell.TabBarForegroundColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}"
+        Shell.TabBarTitleColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}"
+        Shell.TabBarUnselectedColor="{StaticResource BrandTertiary}">
 
         <ShellContent
             Title="Inicio"

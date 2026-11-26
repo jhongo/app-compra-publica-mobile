@@ -47,9 +47,7 @@
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
 
-    <!-- Colores de la pantalla de registro -->
-    <Color x:Key="RegisterBlue">#2563EB</Color>
-    <Color x:Key="RegisterGreen">#16A34A</Color>
+    <!-- Color de acciones destructivas (p. ej. Cerrar sesión) -->
     <Color x:Key="RegisterRed">#DC2626</Color>
 
     <!-- Paleta de marca Compra Pública (manual de marca: LEEME.md) -->
@@ -64,7 +62,14 @@
     <!-- Crema: fondo de pantallas y texto sobre el primario. -->
     <Color x:Key="BrandCream">#EFEBDA</Color>
 
-    <!-- Botón de Google según su guía de marca (tema claro). -->
-    <Color x:Key="GoogleButtonBorder">#747775</Color>
-    <Color x:Key="GoogleButtonText">#1F1F1F</Color>
+    <!-- Tintes suaves derivados del azul niebla, para fondos y bordes discretos. -->
+    <Color x:Key="BrandBackground">#F6F7F9</Color>
+    <Color x:Key="BrandFieldBorder">#E1E5EB</Color>
+    <!-- Superficie de campos y tarjetas en modo oscuro (entre tinta y primario). -->
+    <Color x:Key="BrandSurfaceDark">#161E2C</Color>
+
+    <!-- Relleno tonal de campos, chips y botones secundarios (sustituye a los contornos). -->
+    <Color x:Key="BrandFieldFill">#E9EDF2</Color>
+    <Color x:Key="BrandFieldFillDark">#1C2638</Color>
+
 </ResourceDictionary>

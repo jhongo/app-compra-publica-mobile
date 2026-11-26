@@ -1,4 +1,3 @@
-using CompraPublicCercaMobile.Models;
 using CompraPublicCercaMobile.Services.Interfaces;
 using Firebase.Auth;
 using Foundation;
@@ -10,10 +9,10 @@ public sealed class IosAuthService : IAuthService
 {
     private const nint GoogleSignInCancelledCode = -5;
 
-    public async Task<AuthUser?> SignInWithGoogleAsync()
+    public async Task<GoogleCredential?> SignInWithGoogleAsync()
     {
         var clientId = Firebase.Core.App.DefaultInstance?.Options.ClientId
-            ?? throw new InvalidOperationException("Falta Platforms/iOS/GoogleService-Info.plist. Revisa docs/firebase-auth.md.");
+            ?? throw new GoogleSignInNotConfiguredException("Platforms/iOS/GoogleService-Info.plist");
         var presenter = Platform.GetCurrentUIViewController()
             ?? throw new InvalidOperationException("No hay una pantalla activa.");
 
@@ -52,7 +51,9 @@ public sealed class IosAuthService : IAuthService
         var authResult = await Auth.DefaultInstance!.SignInWithCredentialAsync(credential);
         var user = authResult.User;
 
-        return new AuthUser(user.Uid, user.DisplayName, user.Email);
+        // ID token de Firebase (no el de Google): es el que valida la API.
+        var firebaseToken = await user.GetIdTokenAsync();
+        return new GoogleCredential(firebaseToken, user.DisplayName, user.Email);
     }
 
     public Task SignOutAsync()

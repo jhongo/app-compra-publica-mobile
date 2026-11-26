@@ -1,18 +1,76 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!-- Pantalla provisional: se diseñará en su propio issue. -->
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:components="clr-namespace:CompraPublicCercaMobile.Views.Components"
+             xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
              x:Class="CompraPublicCercaMobile.Views.FavoritesPage"
-             Title="Favoritos"
-             Shell.NavBarIsVisible="False">
-    <VerticalStackLayout Padding="24" Spacing="8" VerticalOptions="Center">
-        <Label Text="Favoritos"
-               FontSize="24"
-               FontAttributes="Bold"
-               HorizontalTextAlignment="Center" />
-        <Label Text="Próximamente"
-               TextColor="{StaticResource Gray500}"
-               HorizontalTextAlignment="Center" />
-    </VerticalStackLayout>
+             x:DataType="viewModels:FavoritesViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BrandBackground}, Dark={StaticResource BrandInk}}">
+
+    <ScrollView>
+        <!-- Margen inferior amplio: la barra de pestañas de iOS 26 flota sobre el contenido. -->
+        <VerticalStackLayout Padding="24,16,24,120" Spacing="0">
+
+            <!-- ===== Encabezado ===== -->
+            <Label Text="Favoritos"
+                   FontFamily="OpenSansSemibold"
+                   FontSize="26"
+                   SemanticProperties.HeadingLevel="Level1"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+            <Label Text="{Binding CountText}"
+                   Margin="0,4,0,0"
+                   Style="{StaticResource SecondaryTextStyle}"
+                   FontSize="14"
+                   IsVisible="{Binding HasItems}" />
+
+            <!-- ===== Sin favoritos ===== -->
+            <VerticalStackLayout Margin="0,72,0,0" Spacing="10" IsVisible="{Binding IsEmpty}">
+                <Border WidthRequest="80"
+                        HeightRequest="80"
+                        HorizontalOptions="Center"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 40"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BrandFieldFill}, Dark={StaticResource BrandFieldFillDark}}">
+                    <Image Source="ic_fav_off.png" WidthRequest="36" HeightRequest="36" />
+                </Border>
+                <Label Text="Aún no tienes favoritos"
+                       Margin="0,8,0,0"
+                       FontFamily="OpenSansSemibold"
+                       FontSize="17"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+                <Label Text="Toca la estrella de un proceso en Inicio, Buscar o en su detalle para guardarlo aquí."
+                       Style="{StaticResource SecondaryTextStyle}"
+                       FontSize="14"
+                       HorizontalTextAlignment="Center" />
+                <Button Text="Buscar procesos"
+                        Margin="0,16,0,0"
+                        Padding="32,0"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource TonalButtonStyle}"
+                        Command="{Binding GoToSearchCommand}" />
+            </VerticalStackLayout>
+
+            <!-- ===== Lista ===== -->
+            <VerticalStackLayout Margin="0,20,0,0" Spacing="12" BindableLayout.ItemsSource="{Binding Items}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:OpportunityItemViewModel">
+                        <components:OpportunityCard
+                            TapCommand="{Binding OpenDetailCommand, Source={RelativeSource AncestorType={x:Type viewModels:FavoritesViewModel}}, x:DataType=viewModels:FavoritesViewModel}"
+                            FavoriteCommand="{Binding ToggleFavoriteCommand, Source={RelativeSource AncestorType={x:Type viewModels:FavoritesViewModel}}, x:DataType=viewModels:FavoritesViewModel}" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Label Text="Los datos se guardan en este dispositivo tal como estaban al marcarlos. Abre el proceso para ver su información actualizada en SERCOP."
+                   Margin="0,24,0,0"
+                   FontSize="11"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{StaticResource BrandTertiary}"
+                   IsVisible="{Binding HasItems}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

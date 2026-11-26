@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fila de una lista agrupada (estilo Ajustes de iOS / lista de Material):
+     icono, texto, valor a la derecha y chevron si lleva a otra pantalla. -->
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:components="clr-namespace:CompraPublicCercaMobile.Views.Components"
+             x:Class="CompraPublicCercaMobile.Views.Components.ProfileRow"
+             x:Name="Root"
+             x:DataType="components:ProfileRow">
+
+    <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+          ColumnSpacing="14"
+          Padding="16,0,12,0"
+          MinimumHeightRequest="56"
+          BackgroundColor="Transparent"
+          SemanticProperties.Description="{Binding Text, Source={x:Reference Root}}"
+          SemanticProperties.Hint="{Binding Detail, Source={x:Reference Root}}">
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding Command, Source={x:Reference Root}}" />
+        </Grid.GestureRecognizers>
+
+        <Image Source="{Binding Icon, Source={x:Reference Root}}"
+               WidthRequest="22"
+               HeightRequest="22"
+               VerticalOptions="Center" />
+        <Label Grid.Column="1"
+               Text="{Binding Text, Source={x:Reference Root}}"
+               FontSize="16"
+               VerticalOptions="Center"
+               TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+        <Label Grid.Column="2"
+               Text="{Binding Detail, Source={x:Reference Root}}"
+               FontSize="15"
+               VerticalOptions="Center"
+               TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+        <Image Grid.Column="3"
+               Source="ic_chevron_right.png"
+               WidthRequest="20"
+               HeightRequest="20"
+               VerticalOptions="Center"
+               IsVisible="{Binding ShowChevron, Source={x:Reference Root}}" />
+    </Grid>
+</ContentView>

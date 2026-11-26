@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android bloquea http por defecto. Se permite solo hacia la API de desarrollo en la Mac:
+     10.0.2.2 (emulador) y la IP de la Mac en el Wi-Fi (teléfono físico).
+     Si la IP de la Mac cambia, actualízala aquí y en Constants/BackendConstants.cs. -->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">10.0.2.2</domain>
+        <domain includeSubdomains="false">localhost</domain>
+        <domain includeSubdomains="false">192.168.68.51</domain>
+    </domain-config>
+</network-security-config>

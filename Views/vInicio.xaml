@@ -1,132 +1,252 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:models="clr-namespace:CompraPublicCercaMobile.Models"
+             xmlns:components="clr-namespace:CompraPublicCercaMobile.Views.Components"
+             xmlns:controls="clr-namespace:CompraPublicCercaMobile.Controls"
              xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
              x:Class="CompraPublicCercaMobile.Views.vInicio"
              x:DataType="viewModels:HomeViewModel"
              Title="{Binding Title}"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BrandBackground}, Dark={StaticResource BrandInk}}">
 
-    <ContentPage.Resources>
-        <Color x:Key="SubtitleColor">#5F6B7A</Color>
-        <Color x:Key="InputFillColor">#EEF0F3</Color>
-    </ContentPage.Resources>
+    <!-- Deslizar hacia abajo vuelve a consultar SERCOP. -->
+    <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                 Command="{Binding RefreshCommand}"
+                 RefreshColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}">
+        <ScrollView>
+            <!-- Margen inferior amplio: la barra de pestañas de iOS 26 flota sobre el contenido. -->
+            <VerticalStackLayout Padding="0,16,0,120" Spacing="0">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="24,40,24,24" Spacing="16">
+                <!-- ===== Saludo ===== -->
+                <Grid Padding="24,0" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                        <Label Text="{Binding Greeting}"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="24"
+                               SemanticProperties.HeadingLevel="Level1"
+                               TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+                        <!-- Ubicación: al tocarla se abre la lista de provincias -->
+                        <HorizontalStackLayout Spacing="4"
+                                               MinimumHeightRequest="32"
+                                               SemanticProperties.Description="{Binding LocationText, StringFormat='Ubicación: {0}'}"
+                                               SemanticProperties.Hint="Toca para cambiar tu provincia">
+                            <HorizontalStackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ChangeLocationCommand}" />
+                            </HorizontalStackLayout.GestureRecognizers>
+                            <Image Source="ic_field_place.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
+                            <Label Text="{Binding LocationText}"
+                                   FontFamily="OpenSansSemibold"
+                                   FontSize="14"
+                                   VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+                            <Image Source="ic_chevron_down.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
 
-            <!-- Encabezado -->
-            <VerticalStackLayout Spacing="2">
-                <Label Text="{Binding Title}"
-                       FontSize="24"
-                       FontAttributes="Bold" />
-                <Label Text="Compra Pública Cerca"
-                       FontSize="14"
-                       TextColor="{AppThemeBinding Light={StaticResource SubtitleColor}, Dark={StaticResource Gray300}}" />
+                    <!-- Avatar con la inicial del usuario -->
+                    <Border Grid.Column="1"
+                            WidthRequest="48"
+                            HeightRequest="48"
+                            StrokeThickness="0"
+                            StrokeShape="Ellipse"
+                            VerticalOptions="Center"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}"
+                            SemanticProperties.Description="Avatar del usuario">
+                        <Label Text="{Binding UserInitial}"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="18"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource BrandCream}, Dark={StaticResource BrandInk}}" />
+                    </Border>
+                </Grid>
+
+                <!-- ===== Búsqueda ===== -->
+                <Border Margin="24,24,24,0" Style="{StaticResource AuthFieldBorderStyle}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" x:DataType="controls:BorderlessEntry"
+                                     Binding="{Binding Source={x:Reference SearchEntry}, Path=IsFocused}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image Source="ic_field_search.png" Style="{StaticResource AuthFieldIconStyle}" />
+                        <controls:BorderlessEntry x:Name="SearchEntry"
+                                                  Grid.Column="1"
+                                                  Placeholder="Buscar procesos"
+                                                  Text="{Binding SearchText}"
+                                                  ReturnType="Search"
+                                                  ReturnCommand="{Binding SearchCommand}"
+                                                  Style="{StaticResource AuthEntryStyle}"
+                                                  SemanticProperties.Description="Buscar procesos de contratación" />
+                        <Button Grid.Column="2"
+                                Text="Buscar"
+                                Padding="12,0"
+                                HeightRequest="44"
+                                VerticalOptions="Center"
+                                BackgroundColor="Transparent"
+                                FontFamily="OpenSansSemibold"
+                                FontSize="14"
+                                TextColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}"
+                                Command="{Binding SearchCommand}" />
+                    </Grid>
+                </Border>
+
+                <!-- ===== Categorías rápidas (desplazamiento horizontal) ===== -->
+                <ScrollView Orientation="Horizontal"
+                            HorizontalScrollBarVisibility="Never"
+                            Margin="0,16,0,0">
+                    <HorizontalStackLayout Padding="24,0"
+                                           Spacing="8"
+                                           BindableLayout.ItemsSource="{Binding Categories}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="viewModels:CategoryItemViewModel">
+                                <Border HeightRequest="40"
+                                        Style="{StaticResource ChipBorderStyle}"
+                                        SemanticProperties.Description="{Binding Name, StringFormat='Categoría {0}'}">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding SelectCategoryCommand, Source={RelativeSource AncestorType={x:Type viewModels:HomeViewModel}}, x:DataType=viewModels:HomeViewModel}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Label Text="{Binding Name}"
+                                           FontFamily="OpenSansSemibold"
+                                           FontSize="13"
+                                           VerticalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource BrandInk}}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+                </ScrollView>
+
+                <!-- ===== Resumen (total de procesos del año) ===== -->
+                <Border Margin="24,24,24,0"
+                        Padding="20"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 18"
+                        IsVisible="{Binding HasResults}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandSurfaceDark}}">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{Binding Year, StringFormat='Procesos publicados en {0}'}"
+                                   FontSize="13"
+                                   TextColor="{StaticResource BrandTertiary}" />
+                            <Label Text="{Binding TotalResults, StringFormat='{0:N0}'}"
+                                   FontFamily="OpenSansSemibold"
+                                   FontSize="32"
+                                   TextColor="{StaticResource BrandCream}" />
+                            <Label Text="{Binding ActiveKeyword, StringFormat='para «{0}» en todo el país'}"
+                                   FontSize="13"
+                                   TextColor="{StaticResource BrandCream}" />
+                        </VerticalStackLayout>
+                        <Image Grid.Column="1"
+                               Source="brand_isotipo_crema.png"
+                               WidthRequest="52"
+                               HeightRequest="52"
+                               Opacity="0.9"
+                               VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- ===== Encabezado de la lista ===== -->
+                <VerticalStackLayout Padding="24,0" Margin="0,28,0,12" Spacing="2">
+                    <Label Text="Oportunidades recomendadas" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="{Binding NearbyHint}"
+                           Style="{StaticResource SecondaryTextStyle}" />
+                </VerticalStackLayout>
+
+                <!-- ===== Estado: cargando ===== -->
+                <ActivityIndicator Margin="0,32"
+                                   IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center"
+                                   Color="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
+
+                <!-- ===== Estado: error ===== -->
+                <Border Margin="24,0"
+                        Padding="24"
+                        IsVisible="{Binding HasError}"
+                        Style="{StaticResource CardBorderStyle}">
+                    <VerticalStackLayout Spacing="8">
+                        <Image Source="ic_cloud_off.png" WidthRequest="40" HeightRequest="40" HorizontalOptions="Center" />
+                        <Label Text="Sin conexión con SERCOP"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="16"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+                        <Label Text="{Binding ErrorMessage}"
+                               Style="{StaticResource SecondaryTextStyle}"
+                               HorizontalTextAlignment="Center" />
+                        <Button Text="Reintentar"
+                                Margin="0,8,0,0"
+                                HorizontalOptions="Center"
+                                Padding="32,0"
+                                Style="{StaticResource TonalButtonStyle}"
+                                Command="{Binding RetryCommand}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ===== Estado: sin resultados ===== -->
+                <VerticalStackLayout Margin="24,16" Spacing="8" IsVisible="{Binding IsEmpty}">
+                    <Image Source="ic_field_search.png" WidthRequest="40" HeightRequest="40" HorizontalOptions="Center" />
+                    <Label Text="{Binding ActiveKeyword, StringFormat='No hay procesos para «{0}» este año'}"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="16"
+                           HorizontalTextAlignment="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+                    <Label Text="Prueba con otra palabra o elige una categoría."
+                           Style="{StaticResource SecondaryTextStyle}"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <!-- ===== Lista de procesos ===== -->
+                <VerticalStackLayout Padding="24,0"
+                                     Spacing="12"
+                                     BindableLayout.ItemsSource="{Binding Opportunities}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:OpportunityItemViewModel">
+                            <components:OpportunityCard
+                                TapCommand="{Binding OpenDetailCommand, Source={RelativeSource AncestorType={x:Type viewModels:HomeViewModel}}, x:DataType=viewModels:HomeViewModel}"
+                            FavoriteCommand="{Binding ToggleFavoriteCommand, Source={RelativeSource AncestorType={x:Type viewModels:HomeViewModel}}, x:DataType=viewModels:HomeViewModel}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- ===== Cargar más ===== -->
+                <Button Text="Ver más procesos"
+                        Margin="24,16,24,0"
+                        Style="{StaticResource TonalButtonStyle}"
+                        Command="{Binding LoadMoreCommand}"
+                        IsVisible="{Binding HasMorePages}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsLoadingMore}" Value="True">
+                            <Setter Property="Text" Value="Cargando…" />
+                            <Setter Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+                <!-- Atribución requerida por la licencia CC BY 3.0 EC de los datos -->
+                <Label Text="Datos abiertos de SERCOP (estándar OCDS) · Licencia CC BY 3.0 EC"
+                       Margin="24,24,24,0"
+                       FontSize="11"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{StaticResource BrandTertiary}" />
+
             </VerticalStackLayout>
-
-            <BoxView HeightRequest="1"
-                     Color="{StaticResource SeparatorColor}" />
-
-            <!-- Saludo y ubicación -->
-            <VerticalStackLayout Spacing="2" Margin="0,4,0,0">
-                <Label Text="{Binding Greeting}"
-                       FontSize="22"
-                       FontAttributes="Bold" />
-                <Label Text="{Binding Location, StringFormat='Ubicación: {0}'}"
-                       FontSize="14"
-                       TextColor="{AppThemeBinding Light={StaticResource SubtitleColor}, Dark={StaticResource Gray300}}" />
-            </VerticalStackLayout>
-
-            <!-- Búsqueda -->
-            <Border Stroke="{StaticResource SeparatorColor}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 8"
-                    Padding="12,0"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}">
-                <Entry Placeholder="¿Qué oportunidad buscas?"
-                       Text="{Binding SearchText}"
-                       ReturnType="Search"
-                       ReturnCommand="{Binding SearchCommand}"
-                       HeightRequest="48" />
-            </Border>
-
-            <!-- Búsqueda sugerida: al tocarla se copia al campo de búsqueda -->
-            <Border StrokeThickness="0"
-                    StrokeShape="RoundRectangle 8"
-                    Padding="12,0"
-                    HeightRequest="48"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource InputFillColor}, Dark={StaticResource Gray600}}">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding UseSuggestedSearchCommand}" />
-                </Border.GestureRecognizers>
-                <Label Text="{Binding SuggestedSearch}"
-                       VerticalOptions="Center" />
-            </Border>
-
-            <Button Text="BUSCAR"
-                    BackgroundColor="{StaticResource PrimaryColor}"
-                    TextColor="{StaticResource White}"
-                    FontAttributes="Bold"
-                    CornerRadius="8"
-                    HeightRequest="48"
-                    Command="{Binding SearchCommand}" />
-
-            <!-- Oportunidades recomendadas -->
-            <Label Text="Oportunidades recomendadas"
-                   FontSize="18"
-                   FontAttributes="Bold"
-                   Margin="0,16,0,0" />
-
-            <VerticalStackLayout Spacing="12"
-                                 BindableLayout.ItemsSource="{Binding RecommendedOpportunities}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="models:Opportunity">
-                        <Border Stroke="{StaticResource SeparatorColor}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 8"
-                                Padding="16"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}">
-                            <Grid RowDefinitions="Auto,Auto"
-                                  ColumnDefinitions="*,Auto"
-                                  RowSpacing="12"
-                                  ColumnSpacing="12">
-
-                                <Label Grid.ColumnSpan="2"
-                                       Text="{Binding Title}"
-                                       FontSize="16"
-                                       FontAttributes="Bold" />
-
-                                <VerticalStackLayout Grid.Row="1" Spacing="2" VerticalOptions="Center">
-                                    <Label Text="{Binding MatchPercentage, StringFormat='Coincidencia: {0}%'}"
-                                           FontSize="14"
-                                           TextColor="{AppThemeBinding Light={StaticResource SubtitleColor}, Dark={StaticResource Gray300}}" />
-                                    <Label Text="{Binding Deadline, StringFormat='Fecha límite: {0:dd/MM/yyyy}'}"
-                                           FontSize="14"
-                                           TextColor="{AppThemeBinding Light={StaticResource SubtitleColor}, Dark={StaticResource Gray300}}" />
-                                </VerticalStackLayout>
-
-                                <!-- TODO: navegar al detalle cuando exista la pantalla. -->
-                                <Button Grid.Row="1"
-                                        Grid.Column="1"
-                                        Text="DETALLE"
-                                        FontSize="13"
-                                        Padding="16,0"
-                                        HeightRequest="40"
-                                        VerticalOptions="Center"
-                                        CornerRadius="8"
-                                        BorderWidth="1"
-                                        BorderColor="{StaticResource PrimaryColor}"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource PrimaryColor}" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </VerticalStackLayout>
-
-        </VerticalStackLayout>
-    </ScrollView>
+        </ScrollView>
+    </RefreshView>
 </ContentPage>

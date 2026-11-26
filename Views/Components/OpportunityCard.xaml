@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tarjeta de un proceso de contratación. Se usa en Inicio, Buscar y Favoritos.
+     BindingContext: OpportunityItemViewModel. TapCommand y FavoriteCommand reciben ese item. -->
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
+             xmlns:components="clr-namespace:CompraPublicCercaMobile.Views.Components"
+             x:Class="CompraPublicCercaMobile.Views.Components.OpportunityCard"
+             x:Name="Root"
+             x:DataType="viewModels:OpportunityItemViewModel">
+
+    <Border Style="{StaticResource CardBorderStyle}"
+            SemanticProperties.Description="{Binding Opportunity.Description}"
+            SemanticProperties.Hint="Toca para ver el detalle del proceso">
+        <Border.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding TapCommand, Source={x:Reference Root}, x:DataType=components:OpportunityCard}"
+                                  CommandParameter="{Binding .}" />
+        </Border.GestureRecognizers>
+
+        <VerticalStackLayout Spacing="10">
+            <!-- Tipo de proceso, "Cerca de ti" y estrella de favorito -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,-6,-10,-6">
+            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                <Border Style="{StaticResource TagBorderStyle}">
+                    <Label Text="{Binding Opportunity.ProcurementType}"
+                           Style="{StaticResource TagLabelStyle}"
+                           LineBreakMode="TailTruncation"
+                           MaximumWidthRequest="220" />
+                </Border>
+                <Border Style="{StaticResource TagBorderStyle}"
+                        IsVisible="{Binding Opportunity.IsNearby}"
+                        BackgroundColor="{StaticResource BrandCream}">
+                    <Label Text="Cerca de ti"
+                           Style="{StaticResource TagLabelStyle}"
+                           TextColor="{StaticResource BrandPrimary}" />
+                </Border>
+            </HorizontalStackLayout>
+            <!-- 44x44: área táctil mínima (Apple HIG) aunque el icono mida 22 -->
+            <ImageButton Grid.Column="1"
+                         WidthRequest="44"
+                         HeightRequest="44"
+                         Padding="11"
+                         BackgroundColor="Transparent"
+                         Source="ic_fav_off.png"
+                         Command="{Binding FavoriteCommand, Source={x:Reference Root}, x:DataType=components:OpportunityCard}"
+                         CommandParameter="{Binding .}"
+                         SemanticProperties.Description="{Binding FavoriteDescription}">
+                <ImageButton.Triggers>
+                    <DataTrigger TargetType="ImageButton" Binding="{Binding IsFavorite}" Value="True">
+                        <Setter Property="Source" Value="{AppThemeBinding Light=ic_fav_on_dark.png, Dark=ic_fav_on_light.png}" />
+                    </DataTrigger>
+                </ImageButton.Triggers>
+            </ImageButton>
+            </Grid>
+
+            <!-- Objeto del proceso -->
+            <Label Text="{Binding Opportunity.Description}"
+                   FontFamily="OpenSansSemibold"
+                   FontSize="15"
+                   MaxLines="3"
+                   LineBreakMode="TailTruncation"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+
+            <!-- Entidad -->
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                <Image Source="ic_building.png" WidthRequest="14" HeightRequest="14" VerticalOptions="Start" Margin="0,2,0,0" />
+                <Label Grid.Column="1"
+                       Text="{Binding Opportunity.BuyerName}"
+                       Style="{StaticResource SecondaryTextStyle}"
+                       MaxLines="1"
+                       LineBreakMode="TailTruncation" />
+            </Grid>
+
+            <!-- Ubicación -->
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                <Image Source="ic_field_place.png" WidthRequest="14" HeightRequest="14" VerticalOptions="Center" />
+                <Label Grid.Column="1"
+                       Text="{Binding Opportunity.LocationText}"
+                       Style="{StaticResource SecondaryTextStyle}" />
+            </Grid>
+
+            <BoxView HeightRequest="1"
+                     Color="{AppThemeBinding Light={StaticResource BrandFieldBorder}, Dark={StaticResource BrandPrimary}}" />
+
+            <!-- Monto y fecha de actualización -->
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <VerticalStackLayout Spacing="0">
+                    <Label Text="{Binding Opportunity.AmountLabel}"
+                           FontSize="11"
+                           TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+                    <Label Text="{Binding Opportunity.AmountText}"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
+                </VerticalStackLayout>
+                <Label Grid.Column="1"
+                       Text="{Binding Opportunity.UpdatedText}"
+                       FontSize="11"
+                       VerticalOptions="End"
+                       TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}" />
+            </Grid>
+        </VerticalStackLayout>
+    </Border>
+</ContentView>

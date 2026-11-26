@@ -1,215 +1,387 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:components="clr-namespace:CompraPublicCercaMobile.Views.Components"
+             xmlns:controls="clr-namespace:CompraPublicCercaMobile.Controls"
              xmlns:viewModels="clr-namespace:CompraPublicCercaMobile.ViewModels"
              x:Class="CompraPublicCercaMobile.Views.SearchPage"
              x:DataType="viewModels:SearchViewModel"
-             Title="Buscar"
+             Title="{Binding Title}"
              Shell.NavBarIsVisible="False"
-             SafeAreaEdges="All">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BrandBackground}, Dark={StaticResource BrandInk}}">
 
     <ContentPage.Resources>
-        <Color x:Key="SearchSubtitleColor">#5F6B7A</Color>
+        <!-- Título de cada filtro -->
+        <Style x:Key="FilterLabelStyle" TargetType="Label">
+            <Setter Property="FontFamily" Value="OpenSansSemibold" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Margin" Value="0,16,0,8" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+        </Style>
+
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="24,40,24,24"
-                             Spacing="16">
+        <!-- Margen inferior amplio: la barra de pestañas de iOS 26 flota sobre el contenido. -->
+        <VerticalStackLayout Padding="24,16,24,120" Spacing="0">
 
-            <!-- Encabezado -->
-            <VerticalStackLayout Spacing="2">
-                <Label Text="Buscar oportunidades"
-                       FontSize="24"
-                       FontAttributes="Bold" />
+            <!-- ===== Encabezado ===== -->
+            <Label Text="Buscar procesos"
+                   FontFamily="OpenSansSemibold"
+                   FontSize="26"
+                   SemanticProperties.HeadingLevel="Level1"
+                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+            <Label Text="Filtra los concursos publicados en SERCOP."
+                   Margin="0,4,0,0"
+                   Style="{StaticResource SecondaryTextStyle}"
+                   FontSize="14" />
 
-                <Label Text="Compra Pública Cerca"
-                       FontSize="14"
-                       TextColor="{AppThemeBinding Light={StaticResource SearchSubtitleColor}, Dark={StaticResource Gray300}}" />
-            </VerticalStackLayout>
-
-            <BoxView HeightRequest="1"
-                     Color="{StaticResource SeparatorColor}" />
-
-            <!-- Campo de búsqueda -->
-            <Label Text="Palabra clave"
-                   FontSize="15"
-                   FontAttributes="Bold" />
-
-            <Border Stroke="{StaticResource SeparatorColor}"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 8"
-                    Padding="12,0"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}">
-
-                <Entry Placeholder="¿Qué oportunidad buscas?"
-                       Text="{Binding SearchText}"
-                       HeightRequest="48"
-                       ReturnType="Search" />
-
+            <!-- ===== Palabra clave (obligatoria) ===== -->
+            <Border Margin="0,20,0,0" Style="{StaticResource AuthFieldBorderStyle}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" x:DataType="controls:BorderlessEntry"
+                                 Binding="{Binding Source={x:Reference KeywordEntry}, Path=IsFocused}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource BrandSecondary}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Image Source="ic_field_search.png" Style="{StaticResource AuthFieldIconStyle}" />
+                    <controls:BorderlessEntry x:Name="KeywordEntry"
+                                              Grid.Column="1"
+                                              Placeholder="¿Qué buscas? p. ej. limpieza"
+                                              Text="{Binding Keyword}"
+                                              ReturnType="Search"
+                                              ReturnCommand="{Binding SearchCommand}"
+                                              Style="{StaticResource AuthEntryStyle}"
+                                              SemanticProperties.Description="Palabra clave, obligatoria" />
+                </Grid>
             </Border>
 
-            <!-- Sección de filtros -->
-            <Label Text="Filtros de búsqueda"
-                   FontSize="18"
-                   FontAttributes="Bold"
-                   Margin="0,8,0,0" />
+            <!-- Sugerencias (la API no tiene filtro de categoría) -->
+            <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Margin="-24,12,-24,0">
+                <HorizontalStackLayout Padding="24,0" Spacing="8" BindableLayout.ItemsSource="{Binding KeywordSuggestions}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Border Style="{StaticResource ChipBorderStyle}" MinimumHeightRequest="36">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding UseSuggestionCommand, Source={RelativeSource AncestorType={x:Type viewModels:SearchViewModel}}, x:DataType=viewModels:SearchViewModel}"
+                                        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="{Binding .}" Style="{StaticResource ChipLabelStyle}" FontFamily="OpenSansRegular" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+            </ScrollView>
 
-            <!-- Provincia o ciudad -->
-            <VerticalStackLayout Spacing="6">
-                <Label Text="Provincia o ciudad"
-                       FontSize="14" />
+            <!-- ===== Filtros (plegable, sin tarjeta contenedora) ===== -->
+            <VerticalStackLayout Margin="0,24,0,0">
 
-                <Border Stroke="{StaticResource SeparatorColor}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 8"
-                        Padding="10,0"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}">
+                    <!-- Cabecera: al tocar se muestran u ocultan los filtros -->
+                    <Grid ColumnDefinitions="*,Auto"
+                          MinimumHeightRequest="44"
+                          SemanticProperties.Description="Filtros"
+                          SemanticProperties.Hint="Toca para mostrar u ocultar los filtros">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleFiltersCommand}" />
+                        </Grid.GestureRecognizers>
+                        <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                            <Label Text="Filtros"
+                                   FontFamily="OpenSansSemibold"
+                                   FontSize="16"
+                                   TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+                            <Label Text="{Binding FiltersSummary}"
+                                   Style="{StaticResource SecondaryTextStyle}"
+                                   MaxLines="2"
+                                   LineBreakMode="TailTruncation" />
+                        </VerticalStackLayout>
+                        <Image Grid.Column="1"
+                               Source="ic_chevron_down.png"
+                               WidthRequest="24"
+                               HeightRequest="24"
+                               VerticalOptions="Center">
+                            <Image.Triggers>
+                                <DataTrigger TargetType="Image" Binding="{Binding IsFiltersExpanded}" Value="True">
+                                    <Setter Property="Rotation" Value="180" />
+                                </DataTrigger>
+                            </Image.Triggers>
+                        </Image>
+                    </Grid>
 
-                    <Picker Title="Seleccionar ubicación"
-                            SelectedItem="{Binding SelectedLocation}"
-                            HeightRequest="48">
-                        <Picker.Items>
-                            <x:String>Todas</x:String>
-                            <x:String>Pichincha</x:String>
-                            <x:String>Guayas</x:String>
-                            <x:String>Azuay</x:String>
-                            <x:String>Quito</x:String>
-                            <x:String>Guayaquil</x:String>
-                            <x:String>Cuenca</x:String>
-                        </Picker.Items>
-                    </Picker>
+                    <VerticalStackLayout IsVisible="{Binding IsFiltersExpanded}">
 
-                </Border>
-            </VerticalStackLayout>
-
-            <!-- Tipo de proceso -->
-            <VerticalStackLayout Spacing="6">
-                <Label Text="Tipo de proceso"
-                       FontSize="14" />
-
-                <Border Stroke="{StaticResource SeparatorColor}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 8"
-                        Padding="10,0"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}">
-
-                    <Picker Title="Seleccionar tipo"
-                            SelectedItem="{Binding SelectedProcessType}"
-                            HeightRequest="48">
-                        <Picker.Items>
-                            <x:String>Todos</x:String>
-                            <x:String>Ínfima cuantía</x:String>
-                            <x:String>Subasta inversa</x:String>
-                            <x:String>Catálogo electrónico</x:String>
-                            <x:String>Licitación</x:String>
-                        </Picker.Items>
-                    </Picker>
-
-                </Border>
-            </VerticalStackLayout>
-
-            <!-- Monto -->
-            <VerticalStackLayout Spacing="6">
-                <Label Text="Monto"
-                       FontSize="14" />
-
-                <Border Stroke="{StaticResource SeparatorColor}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 8"
-                        Padding="10,0"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}">
-
-                    <Picker Title="Seleccionar rango de monto"
-                            SelectedItem="{Binding SelectedAmount}"
-                            HeightRequest="48">
-                        <Picker.Items>
-                            <x:String>Todos los montos</x:String>
-                            <x:String>Hasta $5.000</x:String>
-                            <x:String>De $5.001 a $10.000</x:String>
-                            <x:String>De $10.001 a $50.000</x:String>
-                            <x:String>Más de $50.000</x:String>
-                        </Picker.Items>
-                    </Picker>
-
-                </Border>
-            </VerticalStackLayout>
-
-            <!-- Botón visual de búsqueda -->
-            <Button Text="BUSCAR"
-                    BackgroundColor="{StaticResource PrimaryColor}"
-                    TextColor="{StaticResource White}"
-                    FontAttributes="Bold"
-                    CornerRadius="8"
-                    HeightRequest="48"
-                    Margin="0,8,0,0" />
-
-            <!-- Encabezado de resultados -->
-            <Label Text="Resultados de búsqueda"
-                   FontSize="18"
-                   FontAttributes="Bold"
-                   Margin="0,12,0,0" />
-
-            <!-- Tarjetas con datos de ejemplo -->
-            <VerticalStackLayout Spacing="12"
-                                 BindableLayout.ItemsSource="{Binding Results}">
-
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:SearchResultItem">
-
-                        <Border Stroke="{StaticResource SeparatorColor}"
-                                StrokeThickness="1"
-                                StrokeShape="RoundRectangle 8"
-                                Padding="16"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}">
-
-                            <VerticalStackLayout Spacing="10">
-
-                                <Label Text="{Binding Title}"
-                                       FontSize="16"
-                                       FontAttributes="Bold" />
-
-                                <Label Text="{Binding Entity, StringFormat='Entidad: {0}'}"
-                                       FontSize="14"
-                                       TextColor="{AppThemeBinding Light={StaticResource SearchSubtitleColor}, Dark={StaticResource Gray300}}" />
-
-                                <Label Text="{Binding Amount, StringFormat='Monto: {0}'}"
-                                       FontSize="14"
-                                       TextColor="{AppThemeBinding Light={StaticResource SearchSubtitleColor}, Dark={StaticResource Gray300}}" />
-
-                                <Label Text="{Binding Deadline, StringFormat='Fecha límite: {0:dd/MM/yyyy}'}"
-                                       FontSize="14"
-                                       TextColor="{AppThemeBinding Light={StaticResource SearchSubtitleColor}, Dark={StaticResource Gray300}}" />
-
-                                <!-- Botón visual, sin navegación -->
-                                <Button Text="DETALLE"
-                                        FontSize="13"
-                                        Padding="16,0"
-                                        HeightRequest="40"
-                                        HorizontalOptions="End"
-                                        CornerRadius="8"
-                                        BorderWidth="1"
-                                        BorderColor="{StaticResource PrimaryColor}"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource PrimaryColor}" />
-
-                            </VerticalStackLayout>
+                        <!-- Año -->
+                        <Label Text="Año" Style="{StaticResource FilterLabelStyle}" />
+                        <Border Padding="16,0,12,0" Style="{StaticResource AuthFieldBorderStyle}">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Image Source="ic_field_calendar.png" Style="{StaticResource AuthFieldIconStyle}" />
+                                <controls:BorderlessPicker Grid.Column="1"
+                                                           Title="Año"
+                                                           ItemsSource="{Binding Years}"
+                                                           SelectedItem="{Binding SelectedYear}"
+                                                           FontSize="15"
+                                                           MinimumHeightRequest="54"
+                                                           VerticalOptions="Center"
+                                                           BackgroundColor="Transparent"
+                                                           TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}"
+                                                           SemanticProperties.Description="Año del proceso" />
+                                <Image Grid.Column="2" Source="ic_chevron_down.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" InputTransparent="True" />
+                            </Grid>
                         </Border>
 
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
+                        <!-- Tipo de procedimiento -->
+                        <Label Text="Tipo de procedimiento" Style="{StaticResource FilterLabelStyle}" />
+                        <!-- Control segmentado: una pista tonal y el segmento elegido en superficie -->
+                        <Border Padding="4"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 14"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource BrandFieldFill}, Dark={StaticResource BrandFieldFillDark}}">
+                            <FlexLayout Direction="Row" BindableLayout.ItemsSource="{Binding MethodOptions}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="viewModels:FilterOptionViewModel">
+                                        <Border FlexLayout.Grow="1"
+                                                FlexLayout.Basis="0"
+                                                HeightRequest="40"
+                                                StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 10"
+                                                BackgroundColor="Transparent"
+                                                SemanticProperties.Description="{Binding Label, StringFormat='Tipo: {0}'}">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding SelectMethodCommand, Source={RelativeSource AncestorType={x:Type viewModels:SearchViewModel}}, x:DataType=viewModels:SearchViewModel}"
+                                                    CommandParameter="{Binding .}" />
+                                            </Border.GestureRecognizers>
+                                            <Border.Triggers>
+                                                <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource BrandSecondary}}" />
+                                                    <Setter Property="Shadow">
+                                                        <Shadow Brush="{StaticResource BrandPrimary}" Opacity="0.10" Radius="6" Offset="0,2" />
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Border.Triggers>
+                                            <Label Text="{Binding Label}"
+                                                   FontFamily="OpenSansRegular"
+                                                   FontSize="13"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource BrandSecondary}, Dark={StaticResource BrandTertiary}}">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                                        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+                                                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
+                        </Border>
+                        <Label Text="{Binding MethodDescription}" Margin="0,8,0,0" Style="{StaticResource SecondaryTextStyle}" />
 
+                        <!-- Provincia (filtro local) -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Provincia" Style="{StaticResource FilterLabelStyle}" />
+                            <Label Grid.Column="1"
+                                   Text="{Binding UseMyProvinceText}"
+                                   IsVisible="{Binding HasUserProvince}"
+                                   Margin="0,16,0,8"
+                                   Style="{StaticResource AuthLinkStyle}"
+                                   FontSize="13"
+                                   MinimumHeightRequest="0">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding UseMyProvinceCommand}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
+                        <Border Padding="16,0,12,0" Style="{StaticResource AuthFieldBorderStyle}">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Image Source="ic_field_place.png" Style="{StaticResource AuthFieldIconStyle}" />
+                                <controls:BorderlessPicker Grid.Column="1"
+                                                           Title="Provincia"
+                                                           ItemsSource="{Binding Provinces}"
+                                                           SelectedItem="{Binding SelectedProvince}"
+                                                           FontSize="15"
+                                                           MinimumHeightRequest="54"
+                                                           VerticalOptions="Center"
+                                                           BackgroundColor="Transparent"
+                                                           TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}"
+                                                           SemanticProperties.Description="Provincia" />
+                                <Image Grid.Column="2" Source="ic_chevron_down.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" InputTransparent="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Monto (filtro local) -->
+                        <Label Text="Monto" Style="{StaticResource FilterLabelStyle}" />
+                        <FlexLayout Wrap="Wrap" BindableLayout.ItemsSource="{Binding AmountOptions}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="viewModels:FilterOptionViewModel">
+                                    <Border Style="{StaticResource ChipBorderStyle}"
+                                            Margin="0,0,8,8"
+                                            SemanticProperties.Description="{Binding Label, StringFormat='Monto: {0}'}">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding SelectAmountCommand, Source={RelativeSource AncestorType={x:Type viewModels:SearchViewModel}}, x:DataType=viewModels:SearchViewModel}"
+                                                CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Label Text="{Binding Label}" Style="{StaticResource ChipLabelStyle}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource BrandInk}}" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+
+                        <!-- Entidad contratante -->
+                        <Label Text="Entidad contratante (opcional)" Style="{StaticResource FilterLabelStyle}" />
+                        <Border Style="{StaticResource AuthFieldBorderStyle}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <Image Source="ic_building.png" Style="{StaticResource AuthFieldIconStyle}" />
+                                <controls:BorderlessEntry Grid.Column="1"
+                                                          Placeholder="p. ej. Municipio de Quito"
+                                                          Text="{Binding Buyer}"
+                                                          ReturnType="Next"
+                                                          Style="{StaticResource AuthEntryStyle}"
+                                                          SemanticProperties.Description="Entidad contratante, opcional" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Proveedor -->
+                        <Label Text="Proveedor (opcional)" Style="{StaticResource FilterLabelStyle}" />
+                        <Border Style="{StaticResource AuthFieldBorderStyle}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <Image Source="ic_field_person.png" Style="{StaticResource AuthFieldIconStyle}" />
+                                <controls:BorderlessEntry Grid.Column="1"
+                                                          Placeholder="Nombre o razón social"
+                                                          Text="{Binding Supplier}"
+                                                          ReturnType="Search"
+                                                          ReturnCommand="{Binding SearchCommand}"
+                                                          Style="{StaticResource AuthEntryStyle}"
+                                                          SemanticProperties.Description="Proveedor, opcional" />
+                            </Grid>
+                        </Border>
+
+                        <Label Text="Provincia y monto los aplica la app sobre los resultados de SERCOP, porque la API no tiene esos filtros."
+                               Margin="0,12,0,0"
+                               FontSize="12"
+                               TextColor="{StaticResource BrandTertiary}" />
+
+                        <Label Text="Limpiar filtros"
+                               Margin="0,4,0,0"
+                               HorizontalOptions="Start"
+                               Style="{StaticResource AuthLinkStyle}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ClearFiltersCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </VerticalStackLayout>
             </VerticalStackLayout>
 
-            <!-- Mensaje cuando no existen resultados -->
-            <Label Text="No se encontraron resultados"
-                   IsVisible="{Binding HasNoResults}"
-                   FontSize="15"
+            <!-- Validación -->
+            <Label Text="{Binding ValidationMessage}"
+                   Margin="0,12,0,0"
+                   FontSize="13"
+                   TextColor="{AppThemeBinding Light=#B3261E, Dark=#F2B8B5}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding ValidationMessage}" Value="">
+                        <Setter Property="IsVisible" Value="False" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
+            <Button Text="Buscar"
+                    Margin="0,16,0,0"
+                    Style="{StaticResource AuthPrimaryButtonStyle}"
+                    Command="{Binding SearchCommand}" />
+
+            <!-- ===== Resultados ===== -->
+            <VerticalStackLayout Margin="0,32,0,12" Spacing="4" IsVisible="{Binding HasResults}">
+                <Label Text="Resultados" Style="{StaticResource SectionTitleStyle}" />
+                <Label Text="{Binding ResultsSummary}" Style="{StaticResource SecondaryTextStyle}" />
+                <Label Text="{Binding LocalFilterNote}"
+                       FontSize="12"
+                       TextColor="{StaticResource BrandTertiary}">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding LocalFilterNote}" Value="">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </VerticalStackLayout>
+
+            <ActivityIndicator Margin="0,32"
+                               IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center"
+                               Color="{AppThemeBinding Light={StaticResource BrandPrimary}, Dark={StaticResource BrandCream}}" />
+
+            <!-- Error -->
+            <Border Margin="0,24,0,0" Padding="24" IsVisible="{Binding HasError}" Style="{StaticResource CardBorderStyle}">
+                <VerticalStackLayout Spacing="8">
+                    <Image Source="ic_cloud_off.png" WidthRequest="40" HeightRequest="40" HorizontalOptions="Center" />
+                    <Label Text="{Binding ErrorMessage}" Style="{StaticResource SecondaryTextStyle}" HorizontalTextAlignment="Center" />
+                    <Button Text="Reintentar" Margin="0,8,0,0" Padding="32,0" HorizontalOptions="Center"
+                            Style="{StaticResource TonalButtonStyle}" Command="{Binding SearchCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sin resultados -->
+            <VerticalStackLayout Margin="0,24,0,0" Spacing="8" IsVisible="{Binding IsEmpty}">
+                <Image Source="ic_field_search.png" WidthRequest="40" HeightRequest="40" HorizontalOptions="Center" />
+                <Label Text="No encontramos procesos con esos filtros"
+                       FontFamily="OpenSansSemibold"
+                       FontSize="16"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource BrandInk}, Dark={StaticResource BrandCream}}" />
+                <Label Text="Prueba con otra palabra, otro año o quita algún filtro."
+                       Style="{StaticResource SecondaryTextStyle}"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="{Binding LocalFilterNote}"
+                       FontSize="12"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{StaticResource BrandTertiary}" />
+            </VerticalStackLayout>
+
+            <!-- Lista -->
+            <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Results}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:OpportunityItemViewModel">
+                        <components:OpportunityCard
+                            TapCommand="{Binding OpenDetailCommand, Source={RelativeSource AncestorType={x:Type viewModels:SearchViewModel}}, x:DataType=viewModels:SearchViewModel}"
+                            FavoriteCommand="{Binding ToggleFavoriteCommand, Source={RelativeSource AncestorType={x:Type viewModels:SearchViewModel}}, x:DataType=viewModels:SearchViewModel}" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Button Text="Ver más resultados"
+                    Margin="0,16,0,0"
+                    Style="{StaticResource TonalButtonStyle}"
+                    Command="{Binding LoadMoreCommand}"
+                    IsVisible="{Binding HasMorePages}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsLoadingMore}" Value="True">
+                        <Setter Property="Text" Value="Cargando…" />
+                        <Setter Property="IsEnabled" Value="False" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <Label Text="Datos abiertos de SERCOP (estándar OCDS) · Licencia CC BY 3.0 EC"
+                   Margin="0,24,0,0"
+                   FontSize="11"
                    HorizontalTextAlignment="Center"
-                   TextColor="{AppThemeBinding Light={StaticResource SearchSubtitleColor}, Dark={StaticResource Gray300}}"
-                   Margin="0,20" />
+                   TextColor="{StaticResource BrandTertiary}" />
 
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>
